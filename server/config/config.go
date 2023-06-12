@@ -119,6 +119,7 @@ type ServerConfig struct {
 	CompactionBatchLimit    int
 	CompactionSleepInterval time.Duration
 	QuotaBackendBytes       int64
+	InitialMmapSize         uint64
 	MaxTxnOps               uint
 
 	// MaxRequestBytes is the maximum request size to send over raft.
