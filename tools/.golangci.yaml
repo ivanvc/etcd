@@ -85,13 +85,17 @@ linters-settings: # please keep this alphabetized
         disabled: false
       # TODO: enable the following rules
       - name: error-strings
-        disabled: true
+        severity: error
+        disabled: false
       - name: var-naming
-        disabled: true
+        severity: error
+        disabled: false
       - name: exported
-        disabled: true
+        severity: error
+        disabled: false
       - name: unexported-return
-        disabled: true
+        severity: error
+        disabled: false
   staticcheck:
     checks:
       - all
