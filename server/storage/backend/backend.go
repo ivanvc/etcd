@@ -164,15 +164,17 @@ func New(bcfg BackendConfig) Backend {
 	return newBackend(bcfg)
 }
 
-func NewDefaultBackend(bc BackendConfig) Backend {
+func WithMmapSize(size uint64) func(BackendConfig) {
+	return func(bcfg BackendConfig) {
+		bcfg.MmapSize = size
+	}
+}
 
-	bcfg := DefaultBackendConfig(bc.Logger)
-	bcfg.Path = bc.Path
-
-	if bc.MmapSize > 0 {
-		bcfg.MmapSize = bc.MmapSize
-	} else {
-		bcfg.MmapSize = InitialMmapSize
+func NewDefaultBackend(lg *zap.Logger, path string, opts ...func(BackendConfig)) Backend {
+	bcfg := DefaultBackendConfig(lg)
+	bcfg.Path = path
+	for _, opt := range opts {
+		opt(bcfg)
 	}
 
 	return newBackend(bcfg)

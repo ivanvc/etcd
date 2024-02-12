@@ -325,7 +325,7 @@ func (s *v3Manager) saveDB() error {
 		return err
 	}
 
-	be := backend.NewDefaultBackend(backend.BackendConfig{Logger: s.lg, Path: s.outDbPath(), MmapSize: s.initialMmapSize})
+	be := backend.NewDefaultBackend(s.lg, s.outDbPath(), backend.WithMmapSize(s.initialMmapSize))
 	defer be.Close()
 
 	err = schema.NewMembershipBackend(s.lg, be).TrimMembershipFromBackend()
@@ -339,7 +339,7 @@ func (s *v3Manager) saveDB() error {
 // modifyLatestRevision can increase the latest revision by the given amount and sets the scheduled compaction
 // to that revision so that the server will consider this revision compacted.
 func (s *v3Manager) modifyLatestRevision(bumpAmount uint64) error {
-	be := backend.NewDefaultBackend(backend.BackendConfig{Logger: s.lg, Path: s.outDbPath()})
+	be := backend.NewDefaultBackend(s.lg, s.outDbPath())
 	defer func() {
 		be.ForceCommit()
 		be.Close()
@@ -480,7 +480,7 @@ func (s *v3Manager) saveWALAndSnap() (*raftpb.HardState, error) {
 	}
 
 	// add members again to persist them to the store we create.
-	be := backend.NewDefaultBackend(backend.BackendConfig{Logger: s.lg, Path: s.outDbPath(), MmapSize: s.initialMmapSize})
+	be := backend.NewDefaultBackend(s.lg, s.outDbPath(), backend.WithMmapSize(s.initialMmapSize))
 	defer be.Close()
 	s.cl.SetBackend(schema.NewMembershipBackend(s.lg, be))
 	for _, m := range s.cl.Members() {
@@ -559,7 +559,7 @@ func (s *v3Manager) saveWALAndSnap() (*raftpb.HardState, error) {
 }
 
 func (s *v3Manager) updateCIndex(commit uint64, term uint64) error {
-	be := backend.NewDefaultBackend(backend.BackendConfig{Logger: s.lg, Path: s.outDbPath(), MmapSize: s.initialMmapSize})
+	be := backend.NewDefaultBackend(s.lg, s.outDbPath(), backend.WithMmapSize(s.initialMmapSize))
 	defer be.Close()
 
 	cindex.UpdateConsistentIndexForce(be.BatchTx(), commit, term)

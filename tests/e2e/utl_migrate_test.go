@@ -166,7 +166,7 @@ func TestEtctlutlMigrate(t *testing.T) {
 			}
 
 			t.Log("etcdutl migrate...")
-			be := backend.NewDefaultBackend(backend.BackendConfig{Logger: lg, Path: filepath.Join(memberDataDir, "member/snap/db")})
+			be := backend.NewDefaultBackend(lg, filepath.Join(memberDataDir, "member/snap/db"))
 			defer be.Close()
 
 			ver := schema.ReadStorageVersion(be.ReadTx())
