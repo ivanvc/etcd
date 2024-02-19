@@ -439,11 +439,11 @@ func (epc *etcdProcessCluster) EndpointsV3() []string {
 }
 
 func (epc *etcdProcessCluster) EndpointsGRPC() []string {
-	return epc.Endpoints(func(ep etcdProcess) []string { return ep.EndpointsGRPC() })
+	return epc.endpoints(func(ep etcdProcess) []string { return ep.EndpointsGRPC() })
 }
 
 func (epc *etcdProcessCluster) EndpointsHTTP() []string {
-	return epc.Endpoints(func(ep etcdProcess) []string { return ep.EndpointsHTTP() })
+	return epc.endpoints(func(ep etcdProcess) []string { return ep.EndpointsHTTP() })
 }
 
 func (epc *etcdProcessCluster) endpoints(f func(ep etcdProcess) []string) (ret []string) {
