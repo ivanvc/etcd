@@ -33,8 +33,8 @@ func TestStartEtcdWrongToken(t *testing.T) {
 	urls := newEmbedURLs(2)
 	curls := []url.URL{urls[0]}
 	purls := []url.URL{urls[1]}
-	cfg.ListenClientUrls, cfg.AdvertiseClientUrls = curls, curls
-	cfg.ListenPeerUrls, cfg.AdvertisePeerUrls = purls, purls
+	cfg.ListenClientURLs, cfg.AdvertiseClientURLs = curls, curls
+	cfg.ListenPeerURLs, cfg.AdvertisePeerURLs = purls, purls
 	cfg.InitialCluster = ""
 	for i := range purls {
 		cfg.InitialCluster += ",default=" + purls[i].String()

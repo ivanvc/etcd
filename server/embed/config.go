@@ -214,8 +214,8 @@ type Config struct {
 	// streams that each client can open at a time.
 	MaxConcurrentStreams uint32 `json:"max-concurrent-streams"`
 
-	ListenPeerUrls, ListenClientUrls, ListenClientHttpUrls []url.URL
-	AdvertisePeerUrls, AdvertiseClientUrls                 []url.URL
+	ListenPeerURLs, ListenClientURLs, ListenClientHTTPURLs []url.URL
+	AdvertisePeerURLs, AdvertiseClientURLs                 []url.URL
 	ClientTLSInfo                                          transport.TLSInfo
 	ClientAutoTLS                                          bool
 	PeerTLSInfo                                            transport.TLSInfo
@@ -362,8 +362,8 @@ type Config struct {
 
 	EnablePprof           bool   `json:"enable-pprof"`
 	Metrics               string `json:"metrics"`
-	ListenMetricsUrls     []url.URL
-	ListenMetricsUrlsJSON string `json:"listen-metrics-urls"`
+	ListenMetricsURLs     []url.URL
+	ListenMetricsURLsJSON string `json:"listen-metrics-urls"`
 
 	// ExperimentalEnableDistributedTracing indicates if experimental tracing using OpenTelemetry is enabled.
 	ExperimentalEnableDistributedTracing bool `json:"experimental-enable-distributed-tracing"`
@@ -444,11 +444,11 @@ type configYAML struct {
 
 // configJSON has file options that are translated into Config options
 type configJSON struct {
-	ListenPeerUrls       string `json:"listen-peer-urls"`
-	ListenClientUrls     string `json:"listen-client-urls"`
-	ListenClientHttpUrls string `json:"listen-client-http-urls"`
-	AdvertisePeerUrls    string `json:"initial-advertise-peer-urls"`
-	AdvertiseClientUrls  string `json:"advertise-client-urls"`
+	ListenPeerURLs       string `json:"listen-peer-urls"`
+	ListenClientURLs     string `json:"listen-client-urls"`
+	ListenClientHTTPURLs string `json:"listen-client-http-urls"`
+	AdvertisePeerURLs    string `json:"initial-advertise-peer-urls"`
+	AdvertiseClientURLs  string `json:"advertise-client-urls"`
 
 	CORSJSON          string `json:"cors"`
 	HostWhitelistJSON string `json:"host-whitelist"`
@@ -500,10 +500,10 @@ func NewConfig() *Config {
 		ElectionMs:                 1000,
 		InitialElectionTickAdvance: true,
 
-		ListenPeerUrls:      []url.URL{*lpurl},
-		ListenClientUrls:    []url.URL{*lcurl},
-		AdvertisePeerUrls:   []url.URL{*apurl},
-		AdvertiseClientUrls: []url.URL{*acurl},
+		ListenPeerURLs:      []url.URL{*lpurl},
+		ListenClientURLs:    []url.URL{*lcurl},
+		AdvertisePeerURLs:   []url.URL{*apurl},
+		AdvertiseClientURLs: []url.URL{*acurl},
 
 		ClusterState:        ClusterStateFlagNew,
 		InitialClusterToken: "etcd-cluster",
@@ -760,58 +760,58 @@ func (cfg *configYAML) configFromFile(path string) error {
 		return err
 	}
 
-	if cfg.configJSON.ListenPeerUrls != "" {
-		u, err := types.NewURLs(strings.Split(cfg.configJSON.ListenPeerUrls, ","))
+	if cfg.configJSON.ListenPeerURLs != "" {
+		u, err := types.NewURLs(strings.Split(cfg.configJSON.ListenPeerURLs, ","))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "unexpected error setting up listen-peer-urls: %v\n", err)
 			os.Exit(1)
 		}
-		cfg.Config.ListenPeerUrls = u
+		cfg.Config.ListenPeerURLs = u
 	}
 
-	if cfg.configJSON.ListenClientUrls != "" {
-		u, err := types.NewURLs(strings.Split(cfg.configJSON.ListenClientUrls, ","))
+	if cfg.configJSON.ListenClientURLs != "" {
+		u, err := types.NewURLs(strings.Split(cfg.configJSON.ListenClientURLs, ","))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "unexpected error setting up listen-client-urls: %v\n", err)
 			os.Exit(1)
 		}
-		cfg.Config.ListenClientUrls = u
+		cfg.Config.ListenClientURLs = u
 	}
 
-	if cfg.configJSON.ListenClientHttpUrls != "" {
-		u, err := types.NewURLs(strings.Split(cfg.configJSON.ListenClientHttpUrls, ","))
+	if cfg.configJSON.ListenClientHTTPURLs != "" {
+		u, err := types.NewURLs(strings.Split(cfg.configJSON.ListenClientHTTPURLs, ","))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "unexpected error setting up listen-client-http-urls: %v\n", err)
 			os.Exit(1)
 		}
-		cfg.Config.ListenClientHttpUrls = u
+		cfg.Config.ListenClientHTTPURLs = u
 	}
 
-	if cfg.configJSON.AdvertisePeerUrls != "" {
-		u, err := types.NewURLs(strings.Split(cfg.configJSON.AdvertisePeerUrls, ","))
+	if cfg.configJSON.AdvertisePeerURLs != "" {
+		u, err := types.NewURLs(strings.Split(cfg.configJSON.AdvertisePeerURLs, ","))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "unexpected error setting up initial-advertise-peer-urls: %v\n", err)
 			os.Exit(1)
 		}
-		cfg.Config.AdvertisePeerUrls = u
+		cfg.Config.AdvertisePeerURLs = u
 	}
 
-	if cfg.configJSON.AdvertiseClientUrls != "" {
-		u, err := types.NewURLs(strings.Split(cfg.configJSON.AdvertiseClientUrls, ","))
+	if cfg.configJSON.AdvertiseClientURLs != "" {
+		u, err := types.NewURLs(strings.Split(cfg.configJSON.AdvertiseClientURLs, ","))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "unexpected error setting up advertise-peer-urls: %v\n", err)
 			os.Exit(1)
 		}
-		cfg.Config.AdvertiseClientUrls = u
+		cfg.Config.AdvertiseClientURLs = u
 	}
 
-	if cfg.ListenMetricsUrlsJSON != "" {
-		u, err := types.NewURLs(strings.Split(cfg.ListenMetricsUrlsJSON, ","))
+	if cfg.ListenMetricsURLsJSON != "" {
+		u, err := types.NewURLs(strings.Split(cfg.ListenMetricsURLsJSON, ","))
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "unexpected error setting up listen-metrics-urls: %v\n", err)
 			os.Exit(1)
 		}
-		cfg.ListenMetricsUrls = u
+		cfg.ListenMetricsURLs = u
 	}
 
 	if cfg.CORSJSON != "" {
@@ -880,27 +880,27 @@ func (cfg *Config) Validate() error {
 	if err := cfg.setupLogging(); err != nil {
 		return err
 	}
-	if err := checkBindURLs(cfg.ListenPeerUrls); err != nil {
+	if err := checkBindURLs(cfg.ListenPeerURLs); err != nil {
 		return err
 	}
-	if err := checkBindURLs(cfg.ListenClientUrls); err != nil {
+	if err := checkBindURLs(cfg.ListenClientURLs); err != nil {
 		return err
 	}
-	if err := checkBindURLs(cfg.ListenClientHttpUrls); err != nil {
+	if err := checkBindURLs(cfg.ListenClientHTTPURLs); err != nil {
 		return err
 	}
-	if len(cfg.ListenClientHttpUrls) == 0 {
+	if len(cfg.ListenClientHTTPURLs) == 0 {
 		cfg.logger.Warn("Running http and grpc server on single port. This is not recommended for production.")
 	}
-	if err := checkBindURLs(cfg.ListenMetricsUrls); err != nil {
+	if err := checkBindURLs(cfg.ListenMetricsURLs); err != nil {
 		return err
 	}
-	if err := checkHostURLs(cfg.AdvertisePeerUrls); err != nil {
-		addrs := cfg.getAdvertisePeerUrls()
+	if err := checkHostURLs(cfg.AdvertisePeerURLs); err != nil {
+		addrs := cfg.getAdvertisePeerURLs()
 		return fmt.Errorf(`--initial-advertise-peer-urls %q must be "host:port" (%v)`, strings.Join(addrs, ","), err)
 	}
-	if err := checkHostURLs(cfg.AdvertiseClientUrls); err != nil {
-		addrs := cfg.getAdvertiseClientUrls()
+	if err := checkHostURLs(cfg.AdvertiseClientURLs); err != nil {
+		addrs := cfg.getAdvertiseClientURLs()
 		return fmt.Errorf(`--advertise-client-urls %q must be "host:port" (%v)`, strings.Join(addrs, ","), err)
 	}
 	// Check if conflicting flags are passed.
@@ -955,7 +955,7 @@ func (cfg *Config) Validate() error {
 	}
 
 	// check this last since proxying in etcdmain may make this OK
-	if cfg.ListenClientUrls != nil && cfg.AdvertiseClientUrls == nil {
+	if cfg.ListenClientURLs != nil && cfg.AdvertiseClientURLs == nil {
 		return ErrUnsetAdvertiseClientURLsFlag
 	}
 
@@ -1028,14 +1028,14 @@ func (cfg *Config) PeerURLsMapAndToken(which string) (urlsmap types.URLsMap, tok
 		urlsmap = types.URLsMap{}
 		// If using v2 discovery, generate a temporary cluster based on
 		// self's advertised peer URLs
-		urlsmap[cfg.Name] = cfg.AdvertisePeerUrls
+		urlsmap[cfg.Name] = cfg.AdvertisePeerURLs
 		token = cfg.Durl
 
 	case len(cfg.DiscoveryCfg.Endpoints) > 0:
 		urlsmap = types.URLsMap{}
 		// If using v3 discovery, generate a temporary cluster based on
 		// self's advertised peer URLs
-		urlsmap[cfg.Name] = cfg.AdvertisePeerUrls
+		urlsmap[cfg.Name] = cfg.AdvertisePeerURLs
 		token = cfg.DiscoveryCfg.Token
 
 	case cfg.DNSCluster != "":
@@ -1089,7 +1089,7 @@ func (cfg *Config) GetDNSClusterNames() ([]string, error) {
 
 	// Use both etcd-server-ssl and etcd-server for discovery.
 	// Combine the results if both are available.
-	clusterStrs, cerr = getCluster("https", "etcd-server-ssl"+serviceNameSuffix, cfg.Name, cfg.DNSCluster, cfg.AdvertisePeerUrls)
+	clusterStrs, cerr = getCluster("https", "etcd-server-ssl"+serviceNameSuffix, cfg.Name, cfg.DNSCluster, cfg.AdvertisePeerURLs)
 	if cerr != nil {
 		clusterStrs = make([]string, 0)
 	}
@@ -1099,12 +1099,12 @@ func (cfg *Config) GetDNSClusterNames() ([]string, error) {
 		zap.String("service-name", "etcd-server-ssl"+serviceNameSuffix),
 		zap.String("server-name", cfg.Name),
 		zap.String("discovery-srv", cfg.DNSCluster),
-		zap.Strings("advertise-peer-urls", cfg.getAdvertisePeerUrls()),
+		zap.Strings("advertise-peer-urls", cfg.getAdvertisePeerURLs()),
 		zap.Strings("found-cluster", clusterStrs),
 		zap.Error(cerr),
 	)
 
-	defaultHTTPClusterStrs, httpCerr := getCluster("http", "etcd-server"+serviceNameSuffix, cfg.Name, cfg.DNSCluster, cfg.AdvertisePeerUrls)
+	defaultHTTPClusterStrs, httpCerr := getCluster("http", "etcd-server"+serviceNameSuffix, cfg.Name, cfg.DNSCluster, cfg.AdvertisePeerURLs)
 	if httpCerr == nil {
 		clusterStrs = append(clusterStrs, defaultHTTPClusterStrs...)
 	}
@@ -1114,7 +1114,7 @@ func (cfg *Config) GetDNSClusterNames() ([]string, error) {
 		zap.String("service-name", "etcd-server"+serviceNameSuffix),
 		zap.String("server-name", cfg.Name),
 		zap.String("discovery-srv", cfg.DNSCluster),
-		zap.Strings("advertise-peer-urls", cfg.getAdvertisePeerUrls()),
+		zap.Strings("advertise-peer-urls", cfg.getAdvertisePeerURLs()),
 		zap.Strings("found-cluster", clusterStrs),
 		zap.Error(httpCerr),
 	)
@@ -1123,15 +1123,15 @@ func (cfg *Config) GetDNSClusterNames() ([]string, error) {
 }
 
 func (cfg *Config) InitialClusterFromName(name string) (ret string) {
-	if len(cfg.AdvertisePeerUrls) == 0 {
+	if len(cfg.AdvertisePeerURLs) == 0 {
 		return ""
 	}
 	n := name
 	if name == "" {
 		n = DefaultName
 	}
-	for i := range cfg.AdvertisePeerUrls {
-		ret = ret + "," + n + "=" + cfg.AdvertisePeerUrls[i].String()
+	for i := range cfg.AdvertisePeerURLs {
+		ret = ret + "," + n + "=" + cfg.AdvertisePeerURLs[i].String()
 	}
 	return ret[1:]
 }
@@ -1147,11 +1147,11 @@ func (cfg *Config) V2DeprecationEffective() config.V2DeprecationEnum {
 }
 
 func (cfg *Config) defaultPeerHost() bool {
-	return len(cfg.AdvertisePeerUrls) == 1 && cfg.AdvertisePeerUrls[0].String() == DefaultInitialAdvertisePeerURLs
+	return len(cfg.AdvertisePeerURLs) == 1 && cfg.AdvertisePeerURLs[0].String() == DefaultInitialAdvertisePeerURLs
 }
 
 func (cfg *Config) defaultClientHost() bool {
-	return len(cfg.AdvertiseClientUrls) == 1 && cfg.AdvertiseClientUrls[0].String() == DefaultAdvertiseClientURLs
+	return len(cfg.AdvertiseClientURLs) == 1 && cfg.AdvertiseClientURLs[0].String() == DefaultAdvertiseClientURLs
 }
 
 func (cfg *Config) ClientSelfCert() (err error) {
@@ -1162,11 +1162,11 @@ func (cfg *Config) ClientSelfCert() (err error) {
 		cfg.logger.Warn("ignoring client auto TLS since certs given")
 		return nil
 	}
-	chosts := make([]string, 0, len(cfg.ListenClientUrls)+len(cfg.ListenClientHttpUrls))
-	for _, u := range cfg.ListenClientUrls {
+	chosts := make([]string, 0, len(cfg.ListenClientURLs)+len(cfg.ListenClientHTTPURLs))
+	for _, u := range cfg.ListenClientURLs {
 		chosts = append(chosts, u.Host)
 	}
-	for _, u := range cfg.ListenClientHttpUrls {
+	for _, u := range cfg.ListenClientHTTPURLs {
 		chosts = append(chosts, u.Host)
 	}
 	cfg.ClientTLSInfo, err = transport.SelfCert(cfg.logger, filepath.Join(cfg.Dir, "fixtures", "client"), chosts, cfg.SelfSignedCertValidity)
@@ -1184,8 +1184,8 @@ func (cfg *Config) PeerSelfCert() (err error) {
 		cfg.logger.Warn("ignoring peer auto TLS since certs given")
 		return nil
 	}
-	phosts := make([]string, len(cfg.ListenPeerUrls))
-	for i, u := range cfg.ListenPeerUrls {
+	phosts := make([]string, len(cfg.ListenPeerURLs))
+	for i, u := range cfg.ListenPeerURLs {
 		phosts[i] = u.Host
 	}
 	cfg.PeerTLSInfo, err = transport.SelfCert(cfg.logger, filepath.Join(cfg.Dir, "fixtures", "peer"), phosts, cfg.SelfSignedCertValidity)
@@ -1213,9 +1213,9 @@ func (cfg *Config) UpdateDefaultClusterFromName(defaultInitialCluster string) (s
 	}
 
 	used := false
-	pip, pport := cfg.ListenPeerUrls[0].Hostname(), cfg.ListenPeerUrls[0].Port()
+	pip, pport := cfg.ListenPeerURLs[0].Hostname(), cfg.ListenPeerURLs[0].Port()
 	if cfg.defaultPeerHost() && pip == "0.0.0.0" {
-		cfg.AdvertisePeerUrls[0] = url.URL{Scheme: cfg.AdvertisePeerUrls[0].Scheme, Host: fmt.Sprintf("%s:%s", defaultHostname, pport)}
+		cfg.AdvertisePeerURLs[0] = url.URL{Scheme: cfg.AdvertisePeerURLs[0].Scheme, Host: fmt.Sprintf("%s:%s", defaultHostname, pport)}
 		used = true
 	}
 	// update 'initial-cluster' when only the name is specified (e.g. 'etcd --name=abc')
@@ -1223,9 +1223,9 @@ func (cfg *Config) UpdateDefaultClusterFromName(defaultInitialCluster string) (s
 		cfg.InitialCluster = cfg.InitialClusterFromName(cfg.Name)
 	}
 
-	cip, cport := cfg.ListenClientUrls[0].Hostname(), cfg.ListenClientUrls[0].Port()
+	cip, cport := cfg.ListenClientURLs[0].Hostname(), cfg.ListenClientURLs[0].Port()
 	if cfg.defaultClientHost() && cip == "0.0.0.0" {
-		cfg.AdvertiseClientUrls[0] = url.URL{Scheme: cfg.AdvertiseClientUrls[0].Scheme, Host: fmt.Sprintf("%s:%s", defaultHostname, cport)}
+		cfg.AdvertiseClientURLs[0] = url.URL{Scheme: cfg.AdvertiseClientURLs[0].Scheme, Host: fmt.Sprintf("%s:%s", defaultHostname, cport)}
 		used = true
 	}
 	dhost := defaultHostname
@@ -1270,42 +1270,42 @@ func checkHostURLs(urls []url.URL) error {
 	return nil
 }
 
-func (cfg *Config) getAdvertisePeerUrls() (ss []string) {
-	ss = make([]string, len(cfg.AdvertisePeerUrls))
-	for i := range cfg.AdvertisePeerUrls {
-		ss[i] = cfg.AdvertisePeerUrls[i].String()
+func (cfg *Config) getAdvertisePeerURLs() (ss []string) {
+	ss = make([]string, len(cfg.AdvertisePeerURLs))
+	for i := range cfg.AdvertisePeerURLs {
+		ss[i] = cfg.AdvertisePeerURLs[i].String()
 	}
 	return ss
 }
 
-func (cfg *Config) getListenPeerUrls() (ss []string) {
-	ss = make([]string, len(cfg.ListenPeerUrls))
-	for i := range cfg.ListenPeerUrls {
-		ss[i] = cfg.ListenPeerUrls[i].String()
+func (cfg *Config) getListenPeerURLs() (ss []string) {
+	ss = make([]string, len(cfg.ListenPeerURLs))
+	for i := range cfg.ListenPeerURLs {
+		ss[i] = cfg.ListenPeerURLs[i].String()
 	}
 	return ss
 }
 
-func (cfg *Config) getAdvertiseClientUrls() (ss []string) {
-	ss = make([]string, len(cfg.AdvertiseClientUrls))
-	for i := range cfg.AdvertiseClientUrls {
-		ss[i] = cfg.AdvertiseClientUrls[i].String()
+func (cfg *Config) getAdvertiseClientURLs() (ss []string) {
+	ss = make([]string, len(cfg.AdvertiseClientURLs))
+	for i := range cfg.AdvertiseClientURLs {
+		ss[i] = cfg.AdvertiseClientURLs[i].String()
 	}
 	return ss
 }
 
-func (cfg *Config) getListenClientUrls() (ss []string) {
-	ss = make([]string, len(cfg.ListenClientUrls))
-	for i := range cfg.ListenClientUrls {
-		ss[i] = cfg.ListenClientUrls[i].String()
+func (cfg *Config) getListenClientURLs() (ss []string) {
+	ss = make([]string, len(cfg.ListenClientURLs))
+	for i := range cfg.ListenClientURLs {
+		ss[i] = cfg.ListenClientURLs[i].String()
 	}
 	return ss
 }
 
 func (cfg *Config) getMetricsURLs() (ss []string) {
-	ss = make([]string, len(cfg.ListenMetricsUrls))
-	for i := range cfg.ListenMetricsUrls {
-		ss[i] = cfg.ListenMetricsUrls[i].String()
+	ss = make([]string, len(cfg.ListenMetricsURLs))
+	for i := range cfg.ListenMetricsURLs {
+		ss[i] = cfg.ListenMetricsURLs[i].String()
 	}
 	return ss
 }

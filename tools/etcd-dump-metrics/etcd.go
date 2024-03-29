@@ -50,8 +50,8 @@ func setupEmbedCfg(cfg *embed.Config, curls, purls, ics []url.URL) {
 	os.RemoveAll(cfg.Dir)
 
 	cfg.ClusterState = "new"
-	cfg.ListenClientUrls, cfg.AdvertiseClientUrls = curls, curls
-	cfg.ListenPeerUrls, cfg.AdvertisePeerUrls = purls, purls
+	cfg.ListenClientURLs, cfg.AdvertiseClientURLs = curls, curls
+	cfg.ListenPeerURLs, cfg.AdvertisePeerURLs = purls, purls
 
 	cfg.InitialCluster = ""
 	for i := range ics {

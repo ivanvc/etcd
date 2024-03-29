@@ -80,7 +80,7 @@ func TestEmbedEtcd(t *testing.T) {
 
 	tests[0].cfg.Durl = "abc"
 	setupEmbedCfg(&tests[1].cfg, []url.URL{urls[0]}, []url.URL{urls[1]})
-	tests[1].cfg.AdvertiseClientUrls = nil
+	tests[1].cfg.AdvertiseClientURLs = nil
 	tests[2].cfg.TickMs = tests[2].cfg.ElectionMs - 1
 	tests[3].cfg.ElectionMs = 999999
 	setupEmbedCfg(&tests[4].cfg, []url.URL{urls[2]}, []url.URL{urls[3]})
@@ -88,8 +88,8 @@ func TestEmbedEtcd(t *testing.T) {
 	setupEmbedCfg(&tests[6].cfg, []url.URL{urls[7], urls[8]}, []url.URL{urls[9]})
 
 	dnsURL, _ := url.Parse("http://whatever.test:12345")
-	tests[7].cfg.ListenClientUrls = []url.URL{*dnsURL}
-	tests[8].cfg.ListenPeerUrls = []url.URL{*dnsURL}
+	tests[7].cfg.ListenClientURLs = []url.URL{*dnsURL}
+	tests[8].cfg.ListenPeerURLs = []url.URL{*dnsURL}
 
 	dir := filepath.Join(t.TempDir(), "embed-etcd")
 
@@ -204,8 +204,8 @@ func setupEmbedCfg(cfg *embed.Config, curls []url.URL, purls []url.URL) {
 	cfg.LogOutputs = []string{"/dev/null"}
 
 	cfg.ClusterState = "new"
-	cfg.ListenClientUrls, cfg.AdvertiseClientUrls = curls, curls
-	cfg.ListenPeerUrls, cfg.AdvertisePeerUrls = purls, purls
+	cfg.ListenClientURLs, cfg.AdvertiseClientURLs = curls, curls
+	cfg.ListenPeerURLs, cfg.AdvertisePeerURLs = purls, purls
 	cfg.InitialCluster = ""
 	for i := range purls {
 		cfg.InitialCluster += ",default=" + purls[i].String()

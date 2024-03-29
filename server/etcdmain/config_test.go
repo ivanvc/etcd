@@ -61,10 +61,10 @@ func TestConfigFileMemberFields(t *testing.T) {
 		Name                   string `json:"name"`
 		SnapshotCount          uint64 `json:"snapshot-count"`
 		SnapshotCatchUpEntries uint64 `json:"experimental-snapshot-catch-up-entries"`
-		ListenPeerUrls         string `json:"listen-peer-urls"`
-		ListenClientUrls       string `json:"listen-client-urls"`
-		ListenClientHttpUrls   string `json:"listen-client-http-urls"`
-		AdvertiseClientUrls    string `json:"advertise-client-urls"`
+		ListenPeerURLs         string `json:"listen-peer-urls"`
+		ListenClientURLs       string `json:"listen-client-urls"`
+		ListenClientHTTPURLs   string `json:"listen-client-http-urls"`
+		AdvertiseClientURLs    string `json:"advertise-client-urls"`
 	}{
 		"testdir",
 		10,
@@ -118,8 +118,8 @@ func TestConfigFileClusteringFields(t *testing.T) {
 		InitialCluster      string `json:"initial-cluster"`
 		ClusterState        string `json:"initial-cluster-state"`
 		InitialClusterToken string `json:"initial-cluster-token"`
-		AdvertisePeerUrls   string `json:"initial-advertise-peer-urls"`
-		AdvertiseClientUrls string `json:"advertise-client-urls"`
+		AdvertisePeerURLs   string `json:"initial-advertise-peer-urls"`
+		AdvertiseClientURLs string `json:"advertise-client-urls"`
 	}{
 		"0=http://localhost:8000",
 		"existing",
@@ -416,9 +416,9 @@ func mustCreateCfgFile(t *testing.T, b []byte) *os.File {
 func validateMemberFlags(t *testing.T, cfg *config) {
 	wcfg := &embed.Config{
 		Dir:                    "testdir",
-		ListenPeerUrls:         []url.URL{{Scheme: "http", Host: "localhost:8000"}, {Scheme: "https", Host: "localhost:8001"}},
-		ListenClientUrls:       []url.URL{{Scheme: "http", Host: "localhost:7000"}, {Scheme: "https", Host: "localhost:7001"}},
-		ListenClientHttpUrls:   []url.URL{{Scheme: "http", Host: "localhost:7002"}, {Scheme: "https", Host: "localhost:7003"}},
+		ListenPeerURLs:         []url.URL{{Scheme: "http", Host: "localhost:8000"}, {Scheme: "https", Host: "localhost:8001"}},
+		ListenClientURLs:       []url.URL{{Scheme: "http", Host: "localhost:7000"}, {Scheme: "https", Host: "localhost:7001"}},
+		ListenClientHTTPURLs:   []url.URL{{Scheme: "http", Host: "localhost:7002"}, {Scheme: "https", Host: "localhost:7003"}},
 		MaxSnapFiles:           10,
 		MaxWALFiles:            10,
 		Name:                   "testname",
@@ -444,21 +444,21 @@ func validateMemberFlags(t *testing.T, cfg *config) {
 	if cfg.ec.SnapshotCatchUpEntries != wcfg.SnapshotCatchUpEntries {
 		t.Errorf("snapshot catch up entries = %v, want %v", cfg.ec.SnapshotCatchUpEntries, wcfg.SnapshotCatchUpEntries)
 	}
-	if !reflect.DeepEqual(cfg.ec.ListenPeerUrls, wcfg.ListenPeerUrls) {
-		t.Errorf("listen-peer-urls = %v, want %v", cfg.ec.ListenPeerUrls, wcfg.ListenPeerUrls)
+	if !reflect.DeepEqual(cfg.ec.ListenPeerURLs, wcfg.ListenPeerURLs) {
+		t.Errorf("listen-peer-urls = %v, want %v", cfg.ec.ListenPeerURLs, wcfg.ListenPeerURLs)
 	}
-	if !reflect.DeepEqual(cfg.ec.ListenClientUrls, wcfg.ListenClientUrls) {
-		t.Errorf("listen-client-urls = %v, want %v", cfg.ec.ListenClientUrls, wcfg.ListenClientUrls)
+	if !reflect.DeepEqual(cfg.ec.ListenClientURLs, wcfg.ListenClientURLs) {
+		t.Errorf("listen-client-urls = %v, want %v", cfg.ec.ListenClientURLs, wcfg.ListenClientURLs)
 	}
-	if !reflect.DeepEqual(cfg.ec.ListenClientHttpUrls, wcfg.ListenClientHttpUrls) {
-		t.Errorf("listen-client-http-urls = %v, want %v", cfg.ec.ListenClientHttpUrls, wcfg.ListenClientHttpUrls)
+	if !reflect.DeepEqual(cfg.ec.ListenClientHTTPURLs, wcfg.ListenClientHTTPURLs) {
+		t.Errorf("listen-client-http-urls = %v, want %v", cfg.ec.ListenClientHTTPURLs, wcfg.ListenClientHTTPURLs)
 	}
 }
 
 func validateClusteringFlags(t *testing.T, cfg *config) {
 	wcfg := newConfig()
-	wcfg.ec.AdvertisePeerUrls = []url.URL{{Scheme: "http", Host: "localhost:8000"}, {Scheme: "https", Host: "localhost:8001"}}
-	wcfg.ec.AdvertiseClientUrls = []url.URL{{Scheme: "http", Host: "localhost:7000"}, {Scheme: "https", Host: "localhost:7001"}}
+	wcfg.ec.AdvertisePeerURLs = []url.URL{{Scheme: "http", Host: "localhost:8000"}, {Scheme: "https", Host: "localhost:8001"}}
+	wcfg.ec.AdvertiseClientURLs = []url.URL{{Scheme: "http", Host: "localhost:7000"}, {Scheme: "https", Host: "localhost:7001"}}
 	wcfg.ec.ClusterState = embed.ClusterStateFlagExisting
 	wcfg.ec.InitialCluster = "0=http://localhost:8000"
 	wcfg.ec.InitialClusterToken = "etcdtest"
@@ -472,10 +472,10 @@ func validateClusteringFlags(t *testing.T, cfg *config) {
 	if cfg.ec.InitialClusterToken != wcfg.ec.InitialClusterToken {
 		t.Errorf("initialClusterToken = %v, want %v", cfg.ec.InitialClusterToken, wcfg.ec.InitialClusterToken)
 	}
-	if !reflect.DeepEqual(cfg.ec.AdvertisePeerUrls, wcfg.ec.AdvertisePeerUrls) {
-		t.Errorf("initial-advertise-peer-urls = %v, want %v", cfg.ec.AdvertisePeerUrls, wcfg.ec.AdvertisePeerUrls)
+	if !reflect.DeepEqual(cfg.ec.AdvertisePeerURLs, wcfg.ec.AdvertisePeerURLs) {
+		t.Errorf("initial-advertise-peer-urls = %v, want %v", cfg.ec.AdvertisePeerURLs, wcfg.ec.AdvertisePeerURLs)
 	}
-	if !reflect.DeepEqual(cfg.ec.AdvertiseClientUrls, wcfg.ec.AdvertiseClientUrls) {
-		t.Errorf("advertise-client-urls = %v, want %v", cfg.ec.AdvertiseClientUrls, wcfg.ec.AdvertiseClientUrls)
+	if !reflect.DeepEqual(cfg.ec.AdvertiseClientURLs, wcfg.ec.AdvertiseClientURLs) {
+		t.Errorf("advertise-client-urls = %v, want %v", cfg.ec.AdvertiseClientURLs, wcfg.ec.AdvertiseClientURLs)
 	}
 }
