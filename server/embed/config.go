@@ -151,7 +151,7 @@ func init() {
 type Config struct {
 	Name   string `json:"name"`
 	Dir    string `json:"data-dir"`
-	WalDir string `json:"wal-dir"`
+	WALDir string `json:"wal-dir"`
 
 	SnapshotCount uint64 `json:"snapshot-count"`
 
@@ -163,7 +163,7 @@ type Config struct {
 	SnapshotCatchUpEntries uint64 `json:"experimental-snapshot-catch-up-entries"`
 
 	MaxSnapFiles uint `json:"max-snapshots"`
-	MaxWalFiles  uint `json:"max-wals"`
+	MaxWALFiles  uint `json:"max-wals"`
 
 	// TickMs is the number of milliseconds between heartbeat ticks.
 	// TODO: decouple tickMs and heartbeat tick (current heartbeat tick = 1).
@@ -230,10 +230,10 @@ type Config struct {
 	// Note that cipher suites are prioritized in the given order.
 	CipherSuites []string `json:"cipher-suites"`
 
-	// TlsMinVersion is the minimum accepted TLS version between client/server and peers.
-	TlsMinVersion string `json:"tls-min-version"`
-	// TlsMaxVersion is the maximum accepted TLS version between client/server and peers.
-	TlsMaxVersion string `json:"tls-max-version"`
+	// TLSMinVersion is the minimum accepted TLS version between client/server and peers.
+	TLSMinVersion string `json:"tls-min-version"`
+	// TLSMaxVersion is the maximum accepted TLS version between client/server and peers.
+	TLSMaxVersion string `json:"tls-max-version"`
 
 	ClusterState          string `json:"initial-cluster-state"`
 	DNSCluster            string `json:"discovery-srv"`
@@ -475,7 +475,7 @@ func NewConfig() *Config {
 	acurl, _ := url.Parse(DefaultAdvertiseClientURLs)
 	cfg := &Config{
 		MaxSnapFiles: DefaultMaxSnapshots,
-		MaxWalFiles:  DefaultMaxWALs,
+		MaxWALFiles:  DefaultMaxWALs,
 
 		Name: DefaultName,
 
@@ -561,7 +561,7 @@ func NewConfig() *Config {
 func (cfg *Config) AddFlags(fs *flag.FlagSet) {
 	// member
 	fs.StringVar(&cfg.Dir, "data-dir", cfg.Dir, "Path to the data directory.")
-	fs.StringVar(&cfg.WalDir, "wal-dir", cfg.WalDir, "Path to the dedicated wal directory.")
+	fs.StringVar(&cfg.WALDir, "wal-dir", cfg.WALDir, "Path to the dedicated wal directory.")
 	fs.Var(
 		flags.NewUniqueURLsWithExceptions(DefaultListenPeerURLs, ""),
 		"listen-peer-urls",
@@ -581,7 +581,7 @@ func (cfg *Config) AddFlags(fs *flag.FlagSet) {
 		"List of URLs to listen on for the metrics and health endpoints.",
 	)
 	fs.UintVar(&cfg.MaxSnapFiles, "max-snapshots", cfg.MaxSnapFiles, "Maximum number of snapshot files to retain (0 is unlimited).")
-	fs.UintVar(&cfg.MaxWalFiles, "max-wals", cfg.MaxWalFiles, "Maximum number of wal files to retain (0 is unlimited).")
+	fs.UintVar(&cfg.MaxWALFiles, "max-wals", cfg.MaxWALFiles, "Maximum number of wal files to retain (0 is unlimited).")
 	fs.StringVar(&cfg.Name, "name", cfg.Name, "Human-readable name for this member.")
 	fs.Uint64Var(&cfg.SnapshotCount, "snapshot-count", cfg.SnapshotCount, "Number of committed transactions to trigger a snapshot to disk.")
 	fs.UintVar(&cfg.TickMs, "heartbeat-interval", cfg.TickMs, "Time (in milliseconds) of a heartbeat interval.")
@@ -669,8 +669,8 @@ func (cfg *Config) AddFlags(fs *flag.FlagSet) {
 	fs.StringVar(&cfg.PeerTLSInfo.AllowedHostname, "peer-cert-allowed-hostname", "", "Allowed TLS hostname for inter peer authentication.")
 	fs.Var(flags.NewStringsValue(""), "cipher-suites", "Comma-separated list of supported TLS cipher suites between client/server and peers (empty will be auto-populated by Go).")
 	fs.BoolVar(&cfg.PeerTLSInfo.SkipClientSANVerify, "experimental-peer-skip-client-san-verification", false, "Skip verification of SAN field in client certificate for peer connections.")
-	fs.StringVar(&cfg.TlsMinVersion, "tls-min-version", string(tlsutil.TLSVersion12), "Minimum TLS version supported by etcd. Possible values: TLS1.2, TLS1.3.")
-	fs.StringVar(&cfg.TlsMaxVersion, "tls-max-version", string(tlsutil.TLSVersionDefault), "Maximum TLS version supported by etcd. Possible values: TLS1.2, TLS1.3 (empty defers to Go).")
+	fs.StringVar(&cfg.TLSMinVersion, "tls-min-version", string(tlsutil.TLSVersion12), "Minimum TLS version supported by etcd. Possible values: TLS1.2, TLS1.3.")
+	fs.StringVar(&cfg.TLSMaxVersion, "tls-max-version", string(tlsutil.TLSVersionDefault), "Maximum TLS version supported by etcd. Possible values: TLS1.2, TLS1.3 (empty defers to Go).")
 
 	fs.Var(
 		flags.NewUniqueURLsWithExceptions("*", "*"),
@@ -998,18 +998,18 @@ func (cfg *Config) Validate() error {
 			zap.String("name", cfg.Name))
 	}
 
-	minVersion, err := tlsutil.GetTLSVersion(cfg.TlsMinVersion)
+	minVersion, err := tlsutil.GetTLSVersion(cfg.TLSMinVersion)
 	if err != nil {
 		return err
 	}
-	maxVersion, err := tlsutil.GetTLSVersion(cfg.TlsMaxVersion)
+	maxVersion, err := tlsutil.GetTLSVersion(cfg.TLSMaxVersion)
 	if err != nil {
 		return err
 	}
 
 	// maxVersion == 0 means that Go selects the highest available version.
 	if maxVersion != 0 && minVersion > maxVersion {
-		return fmt.Errorf("min version (%s) is greater than max version (%s)", cfg.TlsMinVersion, cfg.TlsMaxVersion)
+		return fmt.Errorf("min version (%s) is greater than max version (%s)", cfg.TLSMinVersion, cfg.TLSMaxVersion)
 	}
 
 	// Check if user attempted to configure ciphers for TLS1.3 only: Go does not support that currently.

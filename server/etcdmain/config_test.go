@@ -57,7 +57,7 @@ func TestConfigFileMemberFields(t *testing.T) {
 	yc := struct {
 		Dir                    string `json:"data-dir"`
 		MaxSnapFiles           uint   `json:"max-snapshots"`
-		MaxWalFiles            uint   `json:"max-wals"`
+		MaxWALFiles            uint   `json:"max-wals"`
 		Name                   string `json:"name"`
 		SnapshotCount          uint64 `json:"snapshot-count"`
 		SnapshotCatchUpEntries uint64 `json:"experimental-snapshot-catch-up-entries"`
@@ -420,7 +420,7 @@ func validateMemberFlags(t *testing.T, cfg *config) {
 		ListenClientUrls:       []url.URL{{Scheme: "http", Host: "localhost:7000"}, {Scheme: "https", Host: "localhost:7001"}},
 		ListenClientHttpUrls:   []url.URL{{Scheme: "http", Host: "localhost:7002"}, {Scheme: "https", Host: "localhost:7003"}},
 		MaxSnapFiles:           10,
-		MaxWalFiles:            10,
+		MaxWALFiles:            10,
 		Name:                   "testname",
 		SnapshotCount:          10,
 		SnapshotCatchUpEntries: 1000,
@@ -432,8 +432,8 @@ func validateMemberFlags(t *testing.T, cfg *config) {
 	if cfg.ec.MaxSnapFiles != wcfg.MaxSnapFiles {
 		t.Errorf("maxsnap = %v, want %v", cfg.ec.MaxSnapFiles, wcfg.MaxSnapFiles)
 	}
-	if cfg.ec.MaxWalFiles != wcfg.MaxWalFiles {
-		t.Errorf("maxwal = %v, want %v", cfg.ec.MaxWalFiles, wcfg.MaxWalFiles)
+	if cfg.ec.MaxWALFiles != wcfg.MaxWALFiles {
+		t.Errorf("maxwal = %v, want %v", cfg.ec.MaxWALFiles, wcfg.MaxWALFiles)
 	}
 	if cfg.ec.Name != wcfg.Name {
 		t.Errorf("name = %v, want %v", cfg.ec.Name, wcfg.Name)

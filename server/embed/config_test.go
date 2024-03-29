@@ -492,8 +492,8 @@ func TestTLSVersionMinMax(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			cfg := NewConfig()
-			cfg.TlsMinVersion = tt.givenTLSMinVersion
-			cfg.TlsMaxVersion = tt.givenTLSMaxVersion
+			cfg.TLSMinVersion = tt.givenTLSMinVersion
+			cfg.TLSMaxVersion = tt.givenTLSMaxVersion
 			cfg.CipherSuites = tt.givenCipherSuites
 
 			err := cfg.Validate()
@@ -502,8 +502,8 @@ func TestTLSVersionMinMax(t *testing.T) {
 				return
 			}
 
-			updateMinMaxVersions(&cfg.PeerTLSInfo, cfg.TlsMinVersion, cfg.TlsMaxVersion)
-			updateMinMaxVersions(&cfg.ClientTLSInfo, cfg.TlsMinVersion, cfg.TlsMaxVersion)
+			updateMinMaxVersions(&cfg.PeerTLSInfo, cfg.TLSMinVersion, cfg.TLSMaxVersion)
+			updateMinMaxVersions(&cfg.ClientTLSInfo, cfg.TLSMinVersion, cfg.TLSMaxVersion)
 
 			assert.Equal(t, tt.expectedMinTLSVersion, cfg.PeerTLSInfo.MinVersion)
 			assert.Equal(t, tt.expectedMaxTLSVersion, cfg.PeerTLSInfo.MaxVersion)

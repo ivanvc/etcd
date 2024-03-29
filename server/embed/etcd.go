@@ -171,11 +171,11 @@ func StartEtcd(inCfg *Config) (e *Etcd, err error) {
 		ClientURLs:                               cfg.AdvertiseClientUrls,
 		PeerURLs:                                 cfg.AdvertisePeerUrls,
 		DataDir:                                  cfg.Dir,
-		DedicatedWALDir:                          cfg.WalDir,
+		DedicatedWALDir:                          cfg.WALDir,
 		SnapshotCount:                            cfg.SnapshotCount,
 		SnapshotCatchUpEntries:                   cfg.SnapshotCatchUpEntries,
 		MaxSnapFiles:                             cfg.MaxSnapFiles,
-		MaxWALFiles:                              cfg.MaxWalFiles,
+		MaxWALFiles:                              cfg.MaxWALFiles,
 		InitialPeerURLsMap:                       urlsmap,
 		InitialClusterToken:                      token,
 		DiscoveryURL:                             cfg.Durl,
@@ -320,7 +320,7 @@ func print(lg *zap.Logger, ec Config, sc config.ServerConfig, memberInitialized 
 		zap.Bool("member-initialized", memberInitialized),
 		zap.String("name", sc.Name),
 		zap.String("data-dir", sc.DataDir),
-		zap.String("wal-dir", ec.WalDir),
+		zap.String("wal-dir", ec.WALDir),
 		zap.String("wal-dir-dedicated", sc.DedicatedWALDir),
 		zap.String("member-dir", sc.MemberDir()),
 		zap.Bool("force-new-cluster", sc.ForceNewCluster),
@@ -505,7 +505,7 @@ func configurePeerListeners(cfg *Config) (peers []*peerListener, err error) {
 	if err = cfg.PeerSelfCert(); err != nil {
 		cfg.logger.Fatal("failed to get peer self-signed certs", zap.Error(err))
 	}
-	updateMinMaxVersions(&cfg.PeerTLSInfo, cfg.TlsMinVersion, cfg.TlsMaxVersion)
+	updateMinMaxVersions(&cfg.PeerTLSInfo, cfg.TLSMinVersion, cfg.TLSMaxVersion)
 	if !cfg.PeerTLSInfo.Empty() {
 		cfg.logger.Info(
 			"starting with peer TLS",
@@ -618,7 +618,7 @@ func configureClientListeners(cfg *Config) (sctxs map[string]*serveCtx, err erro
 	if err = cfg.ClientSelfCert(); err != nil {
 		cfg.logger.Fatal("failed to get client self-signed certs", zap.Error(err))
 	}
-	updateMinMaxVersions(&cfg.ClientTLSInfo, cfg.TlsMinVersion, cfg.TlsMaxVersion)
+	updateMinMaxVersions(&cfg.ClientTLSInfo, cfg.TLSMinVersion, cfg.TLSMaxVersion)
 	if cfg.EnablePprof {
 		cfg.logger.Info("pprof is enabled", zap.String("path", debugutil.HTTPPrefixPProf))
 	}
