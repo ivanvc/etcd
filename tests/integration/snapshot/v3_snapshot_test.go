@@ -49,8 +49,8 @@ func TestSnapshotV3RestoreSingle(t *testing.T) {
 	cfg := integration2.NewEmbedConfig(t, "s1")
 	cfg.InitialClusterToken = testClusterTkn
 	cfg.ClusterState = "existing"
-	cfg.ListenClientUrls, cfg.AdvertiseClientUrls = cURLs, cURLs
-	cfg.ListenPeerUrls, cfg.AdvertisePeerUrls = pURLs, pURLs
+	cfg.ListenClientUrls, cfg.AdvertiseClientURLs = cURLs, cURLs
+	cfg.ListenPeerUrls, cfg.AdvertisePeerURLs = pURLs, pURLs
 	cfg.InitialCluster = fmt.Sprintf("%s=%s", cfg.Name, pURLs[0].String())
 
 	sp := snapshot.NewV3(zaptest.NewLogger(t))
@@ -83,7 +83,7 @@ func TestSnapshotV3RestoreSingle(t *testing.T) {
 	}
 
 	var cli *clientv3.Client
-	cli, err = integration2.NewClient(t, clientv3.Config{Endpoints: []string{cfg.AdvertiseClientUrls[0].String()}})
+	cli, err = integration2.NewClient(t, clientv3.Config{Endpoints: []string{cfg.AdvertiseClientURLs[0].String()}})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -178,8 +178,8 @@ func createSnapshotFile(t *testing.T, kvs []kv) string {
 
 	cfg := integration2.NewEmbedConfig(t, "default")
 	cfg.ClusterState = "new"
-	cfg.ListenClientUrls, cfg.AdvertiseClientUrls = cURLs, cURLs
-	cfg.ListenPeerUrls, cfg.AdvertisePeerUrls = pURLs, pURLs
+	cfg.ListenClientUrls, cfg.AdvertiseClientURLs = cURLs, cURLs
+	cfg.ListenPeerUrls, cfg.AdvertisePeerURLs = pURLs, pURLs
 	cfg.InitialCluster = fmt.Sprintf("%s=%s", cfg.Name, pURLs[0].String())
 	srv, err := embed.StartEtcd(cfg)
 	if err != nil {
@@ -194,7 +194,7 @@ func createSnapshotFile(t *testing.T, kvs []kv) string {
 		t.Fatalf("failed to start embed.Etcd for creating snapshots")
 	}
 
-	ccfg := clientv3.Config{Endpoints: []string{cfg.AdvertiseClientUrls[0].String()}}
+	ccfg := clientv3.Config{Endpoints: []string{cfg.AdvertiseClientURLs[0].String()}}
 	cli, err := integration2.NewClient(t, ccfg)
 	if err != nil {
 		t.Fatal(err)
@@ -238,8 +238,8 @@ func restoreCluster(t *testing.T, clusterN int, dbPath string) (
 		cfg := integration2.NewEmbedConfig(t, fmt.Sprintf("m%d", i))
 		cfg.InitialClusterToken = testClusterTkn
 		cfg.ClusterState = "existing"
-		cfg.ListenClientUrls, cfg.AdvertiseClientUrls = []url.URL{cURLs[i]}, []url.URL{cURLs[i]}
-		cfg.ListenPeerUrls, cfg.AdvertisePeerUrls = []url.URL{pURLs[i]}, []url.URL{pURLs[i]}
+		cfg.ListenClientUrls, cfg.AdvertiseClientURLs = []url.URL{cURLs[i]}, []url.URL{cURLs[i]}
+		cfg.ListenPeerUrls, cfg.AdvertisePeerURLs = []url.URL{pURLs[i]}, []url.URL{pURLs[i]}
 		cfg.InitialCluster = ics
 
 		sp := snapshot.NewV3(
