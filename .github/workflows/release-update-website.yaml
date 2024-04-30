@@ -1,0 +1,21 @@
+---
+name: Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  update_website:
+    name: Update website
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+        with:
+          repository: etcd-io/website
+      - env:
+        RELEASE_TAG: ${{ github.release.tag_name }}
+        run: |
+          minor="$(echo $RELEASE_TAG | cut -d. -f1-2)"
+          sed "content/en/docs/$minor/_index.md" s/git_version_tag:/git_version_tag:/
+
