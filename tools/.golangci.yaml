@@ -87,9 +87,12 @@ linters-settings: # please keep this alphabetized
       - name: error-strings
         severity: error
         disabled: false
-      # TODO: enable the following rules
       - name: var-naming
-        disabled: true
+        disabled: false
+        arguments:
+          - []
+          - ["GRPC", "WAL"]
+      # TODO: enable the following rules
       - name: exported
         disabled: true
       - name: unexported-return
