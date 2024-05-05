@@ -12,10 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
         with:
-          repository: etcd-io/website
+          repository: ivanvc/etcd-website
       - env:
-        RELEASE_TAG: ${{ github.release.tag_name }}
+          RELEASE_TAG: ${{ github.release.tag_name }}
         run: |
           minor="$(echo $RELEASE_TAG | cut -d. -f1-2)"
-          sed "content/en/docs/$minor/_index.md" s/git_version_tag:/git_version_tag:/
-
+          sed -i 's/git_version_tag:\sv\([0-9]\+\.\)\{2\}[0-9]\+/git_version_tag: '$RELEASE_TAG'/' "content/en/docs/$minor/_index.md"
+          git commit -m "[$minor] Update installation version to latest tag ($RELEASE_TAG)"
+          git push
