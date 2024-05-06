@@ -1,5 +1,5 @@
 ---
-name: Release
+name: Update Website on Release
 
 on:
   release:
@@ -10,16 +10,27 @@ jobs:
     name: Update website
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      actions: write
     steps:
-      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
-          repository: ivanvc/etcd-website
-      - env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-        run: |
-          minor="$(echo $RELEASE_TAG | cut -d. -f1-2)"
-          sed -i 's/git_version_tag:\sv\([0-9]\+\.\)\{2\}[0-9]\+/git_version_tag: '$RELEASE_TAG'/' "content/en/docs/$minor/_index.md"
-          git add "content/en/docs/$minor/_index.md"
-          git -c user.name="$GITHUB_ACTOR" -c user.email="$GITHUB_ACTOR@users.noreply.github.com" commit -m "[$minor] Update installation version to latest tag ($RELEASE_TAG)"
-          git push origin main
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          debug: ${{ secrets.ACTIONS_RUNNER_DEBUG == 'true' }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: 'etcd-website',
+                workflow_id: 'update-release-version',
+                ref: 'main',
+                inputs: {
+                  release: context.payload.release.tag_name
+                }
+              });
+              #      - env:
+              #          RELEASE_TAG: ${{ github.event.release.tag_name }}
+              #        run: |
+              #          minor="$(echo $RELEASE_TAG | cut -d. -f1-2)"
+              #          sed -i 's/git_version_tag:\sv\([0-9]\+\.\)\{2\}[0-9]\+/git_version_tag: '$RELEASE_TAG'/' "content/en/docs/$minor/_index.md"
+              #          git add "content/en/docs/$minor/_index.md"
+              #          git -c user.name="$GITHUB_ACTOR" -c user.email="$GITHUB_ACTOR@users.noreply.github.com" commit -m "[$minor] Update installation version to latest tag ($RELEASE_TAG)"
+              #          git push origin main
