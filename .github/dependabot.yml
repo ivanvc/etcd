@@ -8,24 +8,28 @@ updates:
 
   - package-ecosystem: gomod
     directories:
-      - /
-      - /api
-      - /client/internal/v2
+      - /tests
+      - /etcdctl
+      - /pkg
+      - /tools/rw-heatmaps
+      - /tools/mod
+      - /tools/testgrid-analysis
+      - /etcdutl
       - /client/pkg
       - /client/v3
-      - /etcdctl
-      - /etcdutl
-      - /pkg
+      - /client/internal/v2
       - /server
-      - /tests
-      - /tools/mod
-      - /tools/rw-heatmaps
-      - /tools/testgrid-analysis
+      - /api
+      - /
     schedule:
       interval: daily
     allow:
       - dependency-type: all
     open-pull-requests-limit: 30
+    groups:
+      weekly-updates:
+        patterns:
+          - "*"
 
   - package-ecosystem: docker
     directory: /
