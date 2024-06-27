@@ -8,19 +8,7 @@ updates:
 
   - package-ecosystem: gomod
     directories:
-      - /
-      - /api
-      - /client/internal/v2
-      - /client/pkg
-      - /client/v3
-      - /etcdctl
-      - /etcdutl
-      - /pkg
-      - /server
-      - /tests
-      - /tools/mod
-      - /tools/rw-heatmaps
-      - /tools/testgrid-analysis
+      - "**/*"
     schedule:
       interval: daily
     allow:
