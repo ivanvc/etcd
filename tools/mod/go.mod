@@ -33,7 +33,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/Djarvur/go-err113 v0.0.0-20210108212216-aea10b59be24 // indirect
 	github.com/GaijinEntertainment/go-exhaustruct/v3 v3.2.0 // indirect
-	github.com/Masterminds/semver v1.5.0 // indirect
+	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/OpenPeeDeeP/depguard/v2 v2.2.0 // indirect
 	github.com/RageCage64/multilinediff v0.2.0 // indirect
 	github.com/akhenakh/hunspellgo v0.0.0-20160221122622-9db38fa26e19 // indirect
@@ -157,7 +157,7 @@ require (
 	github.com/quasilyte/regex/syntax v0.0.0-20210819130434-b3f0c404a727 // indirect
 	github.com/quasilyte/stdinfo v0.0.0-20220114132959-f7386bf02567 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/ryancurrah/gomodguard v1.3.1 // indirect
+	github.com/ryancurrah/gomodguard v1.3.3 // indirect
 	github.com/ryanrolds/sqlclosecheck v0.5.1 // indirect
 	github.com/sabhiram/go-gitignore v0.0.0-20210923224102-525f6e181f06 // indirect
 	github.com/sanposhiho/wastedassign/v2 v2.0.7 // indirect
@@ -182,7 +182,6 @@ require (
 	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/stretchr/testify v1.9.0 // indirect
 	github.com/subosito/gotenv v1.4.1 // indirect
-	github.com/t-yuki/gocover-cobertura v0.0.0-20180217150009-aaee18c8195c // indirect
 	github.com/tdakkota/asciicheck v0.2.0 // indirect
 	github.com/tetafro/godot v1.4.16 // indirect
 	github.com/timakin/bodyclose v0.0.0-20230421092635-574207250966 // indirect
@@ -209,7 +208,7 @@ require (
 	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/exp v0.0.0-20240103183307-be819d1f06fc // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240314144324-c7f7c6466f7f // indirect
-	golang.org/x/mod v0.17.0 // indirect
+	golang.org/x/mod v0.18.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
