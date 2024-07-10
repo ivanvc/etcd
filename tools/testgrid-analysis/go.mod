@@ -5,7 +5,7 @@ go 1.22
 toolchain go1.22.3
 
 require (
-	github.com/GoogleCloudPlatform/testgrid v0.0.173
+	github.com/GoogleCloudPlatform/testgrid v0.0.174
 	github.com/google/go-github/v60 v60.0.0
 	github.com/spf13/cobra v1.8.0
 	google.golang.org/protobuf v1.34.1
