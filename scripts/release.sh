@@ -142,6 +142,12 @@ main() {
         exit 1
       fi
       git tag --local-user "${KEYID}" --sign "${RELEASE_VERSION}" --message "${RELEASE_VERSION}"
+
+      if [ "$DRY_RUN" != "true" ]; then
+        read -p "Push tag ${RELEASE_VERSION} to github.com/etcd-io/etcd [y/N]? " -r confirm
+        [[ "${confirm,,}" == "y" ]] || exit 1
+        git push "${RELEASE_VERSION}"
+      fi
     fi
 
     # Verify the latest commit has the version tag
