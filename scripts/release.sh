@@ -255,11 +255,11 @@ main() {
     log_callout "Skipping artifact upload to gs://etcd. --no-upload flat is set."
   else
     read -p "Upload etcd ${RELEASE_VERSION} release artifacts to gs://etcd [y/N]? " -r confirm
-    [[ "${confirm,,}" == "y" ]] || exit 1
-    maybe_run gsutil -m cp ./release/SHA256SUMS "gs://etcd/${RELEASE_VERSION}/"
-    maybe_run gsutil -m cp ./release/*.zip "gs://etcd/${RELEASE_VERSION}/"
-    maybe_run gsutil -m cp ./release/*.tar.gz "gs://etcd/${RELEASE_VERSION}/"
-    maybe_run gsutil -m acl ch -u allUsers:R -r "gs://etcd/${RELEASE_VERSION}/"
+    #[[ "${confirm,,}" == "y" ]] || exit 1
+    #maybe_run gsutil -m cp ./release/SHA256SUMS "gs://etcd/${RELEASE_VERSION}/"
+    #maybe_run gsutil -m cp ./release/*.zip "gs://etcd/${RELEASE_VERSION}/"
+    #maybe_run gsutil -m cp ./release/*.tar.gz "gs://etcd/${RELEASE_VERSION}/"
+    #maybe_run gsutil -m acl ch -u allUsers:R -r "gs://etcd/${RELEASE_VERSION}/"
   fi
 
   # Push images.
@@ -267,35 +267,35 @@ main() {
     log_callout "Skipping docker push. --no-docker-push flat is set."
   else
     read -p "Publish etcd ${RELEASE_VERSION} docker images to quay.io [y/N]? " -r confirm
-    [[ "${confirm,,}" == "y" ]] || exit 1
-    # shellcheck disable=SC2034
-    for i in {1..5}; do
-      docker login quay.io && break
-      log_warning "login failed, retrying"
-    done
+    #[[ "${confirm,,}" == "y" ]] || exit 1
+    ## shellcheck disable=SC2034
+    #for i in {1..5}; do
+    #  docker login quay.io && break
+    #  log_warning "login failed, retrying"
+    #done
 
-    for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
-      log_callout "Pushing container images to quay.io ${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker push "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-      log_callout "Pushing container images to gcr.io ${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-    done
+    #for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
+    #  log_callout "Pushing container images to quay.io ${RELEASE_VERSION}-${TARGET_ARCH}"
+    #  maybe_run docker push "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+    #  log_callout "Pushing container images to gcr.io ${RELEASE_VERSION}-${TARGET_ARCH}"
+    #  maybe_run docker push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+    #done
 
-    log_callout "Creating manifest-list (multi-image)..."
+    #log_callout "Creating manifest-list (multi-image)..."
 
-    for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
-      maybe_run docker manifest create --amend "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker manifest annotate "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
+    #for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
+    #  maybe_run docker manifest create --amend "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+    #  maybe_run docker manifest annotate "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
 
-      maybe_run docker manifest create --amend "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker manifest annotate "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
-    done
+    #  maybe_run docker manifest create --amend "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+    #  maybe_run docker manifest annotate "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
+    #done
 
-    log_callout "Pushing container manifest list to quay.io ${RELEASE_VERSION}"
-    maybe_run docker manifest push "quay.io/coreos/etcd:${RELEASE_VERSION}"
+    #log_callout "Pushing container manifest list to quay.io ${RELEASE_VERSION}"
+    #maybe_run docker manifest push "quay.io/coreos/etcd:${RELEASE_VERSION}"
 
-    log_callout "Pushing container manifest list to gcr.io ${RELEASE_VERSION}"
-    maybe_run docker manifest push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"
+    #log_callout "Pushing container manifest list to gcr.io ${RELEASE_VERSION}"
+    #maybe_run docker manifest push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"
   fi
 
   ### Release validation
