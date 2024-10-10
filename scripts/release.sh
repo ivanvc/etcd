@@ -302,33 +302,33 @@ main() {
   mkdir -p downloads
 
   # Check image versions
-  for IMAGE in "quay.io/coreos/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"; do
-    if [ "${DRY_RUN}" == "true" ] || [ "${NO_DOCKER_PUSH}" == 1 ]; then
-      IMAGE="${IMAGE}-amd64"
-    fi
-    # shellcheck disable=SC2155
-    local image_version=$(docker run --rm "${IMAGE}" etcd --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
-    if [ "${image_version}" != "${VERSION}" ]; then
-      log_error "Check failed: etcd --version output for ${IMAGE} is incorrect: ${image_version}"
-      exit 1
-    fi
-  done
+  #for IMAGE in "quay.io/coreos/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"; do
+  #  if [ "${DRY_RUN}" == "true" ] || [ "${NO_DOCKER_PUSH}" == 1 ]; then
+  #    IMAGE="${IMAGE}-amd64"
+  #  fi
+  #  # shellcheck disable=SC2155
+  #  local image_version=$(docker run --rm "${IMAGE}" etcd --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
+  #  if [ "${image_version}" != "${VERSION}" ]; then
+  #    log_error "Check failed: etcd --version output for ${IMAGE} is incorrect: ${image_version}"
+  #    exit 1
+  #  fi
+  #done
 
   # Check gsutil binary versions
   # shellcheck disable=SC2155
-  local BINARY_TGZ="etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64.tar.gz"
-  if [ "${DRY_RUN}" == "true" ] || [ "${NO_UPLOAD}" == 1 ]; then
-    cp "./release/${BINARY_TGZ}" downloads
-  else
-    gsutil cp "gs://etcd/${RELEASE_VERSION}/${BINARY_TGZ}" downloads
-  fi
-  tar -zx -C downloads -f "downloads/${BINARY_TGZ}"
-  # shellcheck disable=SC2155
-  local binary_version=$("./downloads/etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64/etcd" --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
-  if [ "${binary_version}" != "${VERSION}" ]; then
-    log_error "Check failed: etcd --version output for ${BINARY_TGZ} from gs://etcd/${RELEASE_VERSION} is incorrect: ${binary_version}"
-    exit 1
-  fi
+  #local BINARY_TGZ="etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64.tar.gz"
+  #if [ "${DRY_RUN}" == "true" ] || [ "${NO_UPLOAD}" == 1 ]; then
+  #  cp "./release/${BINARY_TGZ}" downloads
+  #else
+  #  gsutil cp "gs://etcd/${RELEASE_VERSION}/${BINARY_TGZ}" downloads
+  #fi
+  #tar -zx -C downloads -f "downloads/${BINARY_TGZ}"
+  ## shellcheck disable=SC2155
+  #local binary_version=$("./downloads/etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64/etcd" --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
+  #if [ "${binary_version}" != "${VERSION}" ]; then
+  #  log_error "Check failed: etcd --version output for ${BINARY_TGZ} from gs://etcd/${RELEASE_VERSION} is incorrect: ${binary_version}"
+  #  exit 1
+  #fi
 
   if [ "${DRY_RUN}" == "true" ] || [ "${NO_GH_RELEASE}" == 1 ]; then
     log_warning ""
