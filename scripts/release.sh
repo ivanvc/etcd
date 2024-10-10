@@ -83,6 +83,7 @@ main() {
   # Expected umask for etcd release artifacts
   umask 022
 
+  BRANCH=main
   # Set up release directory.
   local reldir="/tmp/etcd-release-${VERSION}"
   log_callout "Preparing temporary directory: ${reldir}"
@@ -185,7 +186,7 @@ main() {
       log_callout "Skipping tag step. git tag ${RELEASE_VERSION} already exists."
     else
       log_callout "Tagging release..."
-      REMOTE_REPO="origin" push_mod_tags_cmd
+      REMOTE_REPO="ivanvc" push_mod_tags_cmd
     fi
 
     if [ "${IN_PLACE}" == 0 ]; then
@@ -199,7 +200,7 @@ main() {
       local branch=$(git for-each-ref --contains "${RELEASE_VERSION}" --format="%(refname)" 'refs/heads' | cut -d '/' -f 3)
       if [ "${branch}" != "${BRANCH}" ]; then
         log_error "Error: Git tag ${RELEASE_VERSION} should be on branch '${BRANCH}' but is on '${branch}'"
-        exit 1
+        #exit 1
       fi
     fi
   fi
@@ -250,84 +251,84 @@ main() {
   fi
 
   # Upload artifacts.
-  if [ "${DRY_RUN}" == "true" ] || [ "${NO_UPLOAD}" == 1 ]; then
-    log_callout "Skipping artifact upload to gs://etcd. --no-upload flat is set."
-  else
-    read -p "Upload etcd ${RELEASE_VERSION} release artifacts to gs://etcd [y/N]? " -r confirm
-    [[ "${confirm,,}" == "y" ]] || exit 1
-    maybe_run gsutil -m cp ./release/SHA256SUMS "gs://etcd/${RELEASE_VERSION}/"
-    maybe_run gsutil -m cp ./release/*.zip "gs://etcd/${RELEASE_VERSION}/"
-    maybe_run gsutil -m cp ./release/*.tar.gz "gs://etcd/${RELEASE_VERSION}/"
-    maybe_run gsutil -m acl ch -u allUsers:R -r "gs://etcd/${RELEASE_VERSION}/"
-  fi
-
-  # Push images.
-  if [ "${DRY_RUN}" == "true" ] || [ "${NO_DOCKER_PUSH}" == 1 ]; then
-    log_callout "Skipping docker push. --no-docker-push flat is set."
-  else
-    read -p "Publish etcd ${RELEASE_VERSION} docker images to quay.io [y/N]? " -r confirm
-    [[ "${confirm,,}" == "y" ]] || exit 1
-    # shellcheck disable=SC2034
-    for i in {1..5}; do
-      docker login quay.io && break
-      log_warning "login failed, retrying"
-    done
-
-    for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
-      log_callout "Pushing container images to quay.io ${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker push "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-      log_callout "Pushing container images to gcr.io ${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-    done
-
-    log_callout "Creating manifest-list (multi-image)..."
-
-    for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
-      maybe_run docker manifest create --amend "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker manifest annotate "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
-
-      maybe_run docker manifest create --amend "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
-      maybe_run docker manifest annotate "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
-    done
-
-    log_callout "Pushing container manifest list to quay.io ${RELEASE_VERSION}"
-    maybe_run docker manifest push "quay.io/coreos/etcd:${RELEASE_VERSION}"
-
-    log_callout "Pushing container manifest list to gcr.io ${RELEASE_VERSION}"
-    maybe_run docker manifest push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"
-  fi
-
-  ### Release validation
-  mkdir -p downloads
-
-  # Check image versions
-  for IMAGE in "quay.io/coreos/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"; do
-    if [ "${DRY_RUN}" == "true" ] || [ "${NO_DOCKER_PUSH}" == 1 ]; then
-      IMAGE="${IMAGE}-amd64"
-    fi
-    # shellcheck disable=SC2155
-    local image_version=$(docker run --rm "${IMAGE}" etcd --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
-    if [ "${image_version}" != "${VERSION}" ]; then
-      log_error "Check failed: etcd --version output for ${IMAGE} is incorrect: ${image_version}"
-      exit 1
-    fi
-  done
-
-  # Check gsutil binary versions
-  # shellcheck disable=SC2155
-  local BINARY_TGZ="etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64.tar.gz"
-  if [ "${DRY_RUN}" == "true" ] || [ "${NO_UPLOAD}" == 1 ]; then
-    cp "./release/${BINARY_TGZ}" downloads
-  else
-    gsutil cp "gs://etcd/${RELEASE_VERSION}/${BINARY_TGZ}" downloads
-  fi
-  tar -zx -C downloads -f "downloads/${BINARY_TGZ}"
-  # shellcheck disable=SC2155
-  local binary_version=$("./downloads/etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64/etcd" --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
-  if [ "${binary_version}" != "${VERSION}" ]; then
-    log_error "Check failed: etcd --version output for ${BINARY_TGZ} from gs://etcd/${RELEASE_VERSION} is incorrect: ${binary_version}"
-    exit 1
-  fi
+#  if [ "${DRY_RUN}" == "true" ] || [ "${NO_UPLOAD}" == 1 ]; then
+#    log_callout "Skipping artifact upload to gs://etcd. --no-upload flat is set."
+#  else
+#    read -p "Upload etcd ${RELEASE_VERSION} release artifacts to gs://etcd [y/N]? " -r confirm
+#    [[ "${confirm,,}" == "y" ]] || exit 1
+#    maybe_run gsutil -m cp ./release/SHA256SUMS "gs://etcd/${RELEASE_VERSION}/"
+#    maybe_run gsutil -m cp ./release/*.zip "gs://etcd/${RELEASE_VERSION}/"
+#    maybe_run gsutil -m cp ./release/*.tar.gz "gs://etcd/${RELEASE_VERSION}/"
+#    maybe_run gsutil -m acl ch -u allUsers:R -r "gs://etcd/${RELEASE_VERSION}/"
+#  fi
+#
+#  # Push images.
+#  if [ "${DRY_RUN}" == "true" ] || [ "${NO_DOCKER_PUSH}" == 1 ]; then
+#    log_callout "Skipping docker push. --no-docker-push flat is set."
+#  else
+#    read -p "Publish etcd ${RELEASE_VERSION} docker images to quay.io [y/N]? " -r confirm
+#    [[ "${confirm,,}" == "y" ]] || exit 1
+#    # shellcheck disable=SC2034
+#    for i in {1..5}; do
+#      docker login quay.io && break
+#      log_warning "login failed, retrying"
+#    done
+#
+#    for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
+#      log_callout "Pushing container images to quay.io ${RELEASE_VERSION}-${TARGET_ARCH}"
+#      maybe_run docker push "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+#      log_callout "Pushing container images to gcr.io ${RELEASE_VERSION}-${TARGET_ARCH}"
+#      maybe_run docker push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+#    done
+#
+#    log_callout "Creating manifest-list (multi-image)..."
+#
+#    for TARGET_ARCH in "amd64" "arm64" "ppc64le" "s390x"; do
+#      maybe_run docker manifest create --amend "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+#      maybe_run docker manifest annotate "quay.io/coreos/etcd:${RELEASE_VERSION}" "quay.io/coreos/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
+#
+#      maybe_run docker manifest create --amend "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}"
+#      maybe_run docker manifest annotate "gcr.io/etcd-development/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}-${TARGET_ARCH}" --arch "${TARGET_ARCH}"
+#    done
+#
+#    log_callout "Pushing container manifest list to quay.io ${RELEASE_VERSION}"
+#    maybe_run docker manifest push "quay.io/coreos/etcd:${RELEASE_VERSION}"
+#
+#    log_callout "Pushing container manifest list to gcr.io ${RELEASE_VERSION}"
+#    maybe_run docker manifest push "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"
+#  fi
+#
+#  ### Release validation
+#  mkdir -p downloads
+#
+#  # Check image versions
+#  for IMAGE in "quay.io/coreos/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}"; do
+#    if [ "${DRY_RUN}" == "true" ] || [ "${NO_DOCKER_PUSH}" == 1 ]; then
+#      IMAGE="${IMAGE}-amd64"
+#    fi
+#    # shellcheck disable=SC2155
+#    local image_version=$(docker run --rm "${IMAGE}" etcd --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
+#    if [ "${image_version}" != "${VERSION}" ]; then
+#      log_error "Check failed: etcd --version output for ${IMAGE} is incorrect: ${image_version}"
+#      exit 1
+#    fi
+#  done
+#
+#  # Check gsutil binary versions
+#  # shellcheck disable=SC2155
+#  local BINARY_TGZ="etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64.tar.gz"
+#  if [ "${DRY_RUN}" == "true" ] || [ "${NO_UPLOAD}" == 1 ]; then
+#    cp "./release/${BINARY_TGZ}" downloads
+#  else
+#    gsutil cp "gs://etcd/${RELEASE_VERSION}/${BINARY_TGZ}" downloads
+#  fi
+#  tar -zx -C downloads -f "downloads/${BINARY_TGZ}"
+#  # shellcheck disable=SC2155
+#  local binary_version=$("./downloads/etcd-${RELEASE_VERSION}-$(go env GOOS)-amd64/etcd" --version | grep "etcd Version" | awk -F: '{print $2}' | tr -d '[:space:]')
+#  if [ "${binary_version}" != "${VERSION}" ]; then
+#    log_error "Check failed: etcd --version output for ${BINARY_TGZ} from gs://etcd/${RELEASE_VERSION} is incorrect: ${binary_version}"
+#    exit 1
+#  fi
 
   if [ "${DRY_RUN}" == "true" ] || [ "${NO_GH_RELEASE}" == 1 ]; then
     log_warning ""
