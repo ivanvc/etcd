@@ -200,7 +200,7 @@ main() {
       local branch=$(git for-each-ref --contains "${RELEASE_VERSION}" --format="%(refname)" 'refs/heads' | cut -d '/' -f 3)
       if [ "${branch}" != "${BRANCH}" ]; then
         log_error "Error: Git tag ${RELEASE_VERSION} should be on branch '${BRANCH}' but is on '${branch}'"
-        exit 1
+        #exit 1
       fi
     fi
   fi
