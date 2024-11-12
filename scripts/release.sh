@@ -41,7 +41,7 @@ main() {
       REPOSITORY=$(pwd)
       BRANCH=$(git rev-parse --abbrev-ref HEAD)
   else
-      REPOSITORY=${REPOSITORY:-"https://github.com/etcd-io/etcd.git"}
+      REPOSITORY=${REPOSITORY:-"git@github.com:etcd-io/etcd.git"}
       BRANCH=${BRANCH:-"release-${MINOR_VERSION}"}
   fi
 
@@ -306,18 +306,23 @@ main() {
     log_warning "WARNING: If not running on DRY_MODE, please do the GitHub release manually."
     log_warning ""
   else
+    read -p "Create GitHub draft release in ${REPOSITORY} [y/N]? " -r confirm
+    [[ "${confirm,,}" == "y" ]] || exit 1
+
     local gh_repo
     local release_notes_temp_file
     local release_url
     local gh_release_args=()
 
     # For the main branch (v3.6), we should mark the release as a prerelease.
-    # The release-3.5 (v3.5) branch, should be marked as latest. And release-3.4 (v3.4)
-    # should be left without any additional mark (therefore, it doesn't need a special argument).
+    # The release-3.5 (v3.5) branch, should be marked as latest. Otherwise
+    # (i.e., v3.4) should be set as not latest.
     if [ "${BRANCH}" = "main" ]; then
       gh_release_args=(--prerelease)
     elif [ "${BRANCH}" = "release-3.5" ]; then
       gh_release_args=(--latest)
+    else
+      gh_release_args(--latest=false)
     fi
 
     if [ "${REPOSITORY}" = "$(pwd)" ]; then
