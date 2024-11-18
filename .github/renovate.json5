@@ -1,0 +1,29 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'config:recommended',
+    //'schedule:daily',
+  ],
+  baseBranches: [
+    'main',
+  ],
+  enabledManagers: [
+    'gomod',
+  ],
+  labels: [
+    'dependencies',
+  ],
+  packageRules: [
+    {
+      addLabels: ['go'],
+      enabled: true,
+      matchDepTypes: ['indirect'],
+      matchManagers: ['gomod'],
+    },
+  ],
+  postUpdateOptions: [
+    'gomodTidy',
+    'gomodUpdateImportPaths',
+  ],
+  prConcurrentLimit: 30,
+}
