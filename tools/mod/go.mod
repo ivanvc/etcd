@@ -15,7 +15,7 @@ require (
 	github.com/google/yamlfmt v0.14.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.23.0
 	go.etcd.io/gofail v0.2.0
-	go.etcd.io/protodoc v0.0.0-20180829002748-484ab544e116
+	go.etcd.io/protodoc v0.0.0-20231003092203-c231a1243ac5
 	go.etcd.io/raft/v3 v3.6.0-alpha.0
 	gotest.tools/gotestsum v1.12.0
 	gotest.tools/v3 v3.5.1
