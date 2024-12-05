@@ -12,7 +12,6 @@ updates:
       - /etcdctl
       - /pkg
       - /tools/rw-heatmaps
-      - /tools/mod
       - /tools/testgrid-analysis
       - /etcdutl
       - /client/pkg
@@ -28,6 +27,17 @@ updates:
     open-pull-requests-limit: 30
     groups:
       weekly-updates:
+        patterns:
+          - "*"
+
+  - package-ecosystem: gomod
+    directory: /tools/mod
+    schedule:
+      interval: daily
+    allow:
+      - dependency-type: direct
+    groups:
+      tools-mod:
         patterns:
           - "*"
 
