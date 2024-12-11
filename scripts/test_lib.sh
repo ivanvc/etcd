@@ -202,29 +202,47 @@ function modules_for_bom() {
   done
 }
 
+# returns all workspace modules.
+function workspace_all_modules() {
+  go work edit -json | jq -r '.Use[].DiskPath + "/..."'
+}
+
+# returns the list of the workspace modules, not including the tools, as they
+# are not considered to be added to the bill of materials.
+function workspace_modules() {
+  local modules=()
+  while IFS= read -r line; do modules+=("$line"); done < <(workspace_all_modules)
+  for m in "${modules[@]}"; do
+    if [[ "$m" =~ ^\./tools ]]; then
+      modules=("${modules[@]/$m}")
+    fi
+  done
+  echo "${modules[@]}"
+}
+
 #  run_for_modules [cmd]
-#  run given command across all modules and packages
+#  run given command across all modules and packages, not including the tools
 #  (unless the set is limited using ${PKG} or / ${USERMOD})
 function run_for_modules {
-  KEEP_GOING_MODULE=${KEEP_GOING_MODULE:-false}
   local pkg="${PKG:-./...}"
   local fail_mod=false
   if [ -z "${USERMOD:-}" ]; then
-    for m in $(module_dirs); do
-      if run_for_module "${m}" "$@" "${pkg}"; then
-        continue
-      else
-        if [ "$KEEP_GOING_MODULE" = false ]; then
-          log_error "There was a Failure in module ${m}, aborting..."
-          return 1
-        fi
-        log_error "There was a Failure in module ${m}, keep going..."
-        fail_mod=true
-      fi
-    done
-    if [ "$fail_mod" = true ]; then
-      return 1
-    fi
+    # shellcheck disable=SC2046
+    "$@" $(workspace_modules)
+  else
+    run_for_module "${USERMOD}" "$@" "${pkg}" || return "$?"
+  fi
+}
+
+#  run_for_modules [cmd]
+#  run given command across all modules and packages
+#  (unless the set is limited using ${PKG} or / ${USERMOD})
+function run_for_all_modules {
+  local pkg="${PKG:-./...}"
+  local fail_mod=false
+  if [ -z "${USERMOD:-}" ]; then
+    # shellcheck disable=SC2046
+    "$@" $(workspace_all_modules)
   else
     run_for_module "${USERMOD}" "$@" "${pkg}" || return "$?"
   fi
