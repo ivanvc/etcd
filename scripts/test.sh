@@ -492,14 +492,14 @@ function gofmt_pass {
 function bom_pass {
   log_callout "Checking bill of materials..."
   # https://github.com/golang/go/commit/7c388cc89c76bc7167287fb488afcaf5a4aa12bf
-  # shellcheck disable=SC2207
-  modules=($(modules_for_bom))
+  local modules=()
+  while IFS= read -r line; do modules+=("$line"); done < <(workspace_modules_without_tools)
 
   # Internally license-bill-of-materials tends to modify go.sum
   run cp go.sum go.sum.tmp || return 2
   run cp go.mod go.mod.tmp || return 2
 
-  output=$(GOFLAGS=-mod=mod run_go_tool github.com/appscodelabs/license-bill-of-materials \
+  output=$(run_go_tool github.com/appscodelabs/license-bill-of-materials \
     --override-file ./bill-of-materials.override.json \
     "${modules[@]}")
   code="$?"
