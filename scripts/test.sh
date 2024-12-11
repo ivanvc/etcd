@@ -456,33 +456,32 @@ function receiver_name_pass {
   run_for_modules receiver_name_for_package
 }
 
-# goword_for_package package
+# goword_check
 # checks spelling and comments in the 'package' in the current module
 #
-function goword_for_package {
-  # bash 3.x compatible replacement of: mapfile -t gofiles < <(go_srcs_in_module)
-  local gofiles=()
-  while IFS= read -r line; do gofiles+=("$line"); done < <(go_srcs_in_module)
-  
-  local gowordRes
+function goword_check {
+  # bash 3.x compatible replacement of: mapfile -t gofiles < <(go_source_files)
+  local go_files=()
+  while IFS= read -r line; do go_files+=("$line"); done < <(go_source_files)
 
+  local goword_res
   # spellchecking can be enabled with GOBINARGS="--tags=spell"
   # but it requires heavy dependencies installation, like:
   # apt-get install libaspell-dev libhunspell-dev hunspell-en-us aspell-en
 
   # only check for broke exported godocs
-  if gowordRes=$(run_go_tool "github.com/chzchzchz/goword" -use-spell=false "${gofiles[@]}" | grep godoc-export | sort); then
-    log_error -e "goword checking failed:\\n${gowordRes}"
+  if goword_res=$(run_go_tool "github.com/chzchzchz/goword" -use-spell=false "${go_files[@]}" | grep godoc-export | sort); then
+    log_error -e "goword checking failed:\\n${goword_res}"
     return 255
   fi
-  if [ -n "$gowordRes" ]; then
-    log_error -e "goword checking returned output:\\n${gowordRes}"
+  if [ -n "$goword_res" ]; then
+    log_error -e "goword checking returned output:\\n${goword_res}"
     return 255
   fi
 }
 
 function goword_pass {
-  run_for_modules goword_for_package || return 255
+  run goword_check
 }
 
 function gofmt_pass {
