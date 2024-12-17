@@ -29,8 +29,8 @@ import (
 	"path/filepath"
 	"time"
 
-	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
-	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/tags"
+	grpc_zap "github.com/grpc-ecosystem/go-grpc-middleware/v2/logging/zap"
+	grpc_ctxtags "github.com/grpc-ecosystem/go-grpc-middleware/v2/tags"
 	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-prometheus"
 	"github.com/soheilhy/cmux"
 	"github.com/spf13/cobra"
