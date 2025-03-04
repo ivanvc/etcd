@@ -1,0 +1,28 @@
+---
+name: Test released assets
+on:
+  release: [published]
+permissions: read-all
+
+jobs:
+  check-artifacts:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        test_assets() {
+          if [ "$(wc -l <SHA256SUMS)" != "$(find . -name 'etcd-*' | wc -l)" ]; then
+            echo "Invalid number of assets"
+            exit 1
+          fi
+          sha256sum -c SHA256SUMS
+        }
+        gh release download "{{ github.event.release.name }}"
+        test_assets
+        mkdir google-assets
+        for file in etcd-*; do
+          curl "https://storage.googleapis.com/etcd/${file}" \
+          --fail \
+          -o "google-assets/${file}"
+        done
+        cd google-assets || exit 1
+        test_assets
