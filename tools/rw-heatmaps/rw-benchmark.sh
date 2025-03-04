@@ -23,7 +23,7 @@ ETCD_BM_BIN="${ETCD_BIN_DIR}/tools/benchmark"
 
 WORKING_DIR="$(mktemp -d)"
 CURRENT_DIR="$(pwd -P)"
-OUTPUT_FILE="${CURRENT_DIR}/result-$(date '+%Y%m%d%H%M').csv"
+OUTPUT_FILE="${OUTPUT_FILE:-"${CURRENT_DIR}/result-$(date '+%Y%m%d%H%M').csv"}"
 
 trap ctrl_c INT
 
@@ -169,6 +169,8 @@ for RATIO_STR in ${RATIO_LIST}; do
       run_etcd_server
       CURRENT_ETCD_PID=$!
       sleep 5
+
+      "${ETCD_BIN_DIR}"/resource_monitor.sh --pid "${CURRENT_ETCD_PID}" --output-file "${OUTPUT_FILE/%.csv/}-resources-ratio-${RATIO}-conn-${CONN_CLI_COUNT}-value-${VALUE_SIZE}.csv" &
 
       init_etcd_db
 
