@@ -14,7 +14,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/google/btree v1.1.3
 	github.com/google/go-cmp v0.7.0
-	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
 	github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus v1.0.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/jonboulle/clockwork v0.5.0
@@ -28,7 +28,7 @@ require (
 	go.etcd.io/bbolt v1.4.0
 	go.etcd.io/etcd/api/v3 v3.6.0-alpha.0
 	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0
-	go.etcd.io/etcd/client/v2 v2.306.0-alpha.0
+	go.etcd.io/etcd/client/v3 v3.5.21
 	go.etcd.io/etcd/client/v3 v3.6.0-alpha.0
 	go.etcd.io/etcd/pkg/v3 v3.6.0-alpha.0
 	go.etcd.io/raft/v3 v3.6.0
@@ -49,7 +49,7 @@ require (
 
 require (
 	github.com/beorn7/perks v1.0.1 // indirect
-	github.com/cenkalti/backoff/v4 v4.3.0 // indirect
+	github.com/cenkalti/backoff/v5 v5.0.2 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect

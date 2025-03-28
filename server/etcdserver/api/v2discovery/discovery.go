@@ -34,7 +34,7 @@ import (
 
 	"go.etcd.io/etcd/client/pkg/v3/transport"
 	"go.etcd.io/etcd/client/pkg/v3/types"
-	"go.etcd.io/etcd/client/v2"
+	"go.etcd.io/etcd/client/v3"
 )
 
 var (

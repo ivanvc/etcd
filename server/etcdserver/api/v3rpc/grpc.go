@@ -18,7 +18,7 @@ import (
 	"crypto/tls"
 	"math"
 
-	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-middleware/providers/prometheus"
+	grpc_prometheus "github.com/grpc-ecosystem/go-grpc-middleware/v2/providers/prometheus"
 	"github.com/prometheus/client_golang/prometheus"
 	"go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc"
 	"go.uber.org/zap"
