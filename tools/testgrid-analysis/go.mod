@@ -6,13 +6,12 @@ toolchain go1.24.1
 
 require (
 	github.com/GoogleCloudPlatform/testgrid v0.0.173
-	github.com/google/go-github/v60 v60.0.0
+	github.com/google/go-github/v70 v70.0.0
 	github.com/spf13/cobra v1.9.1
 	google.golang.org/protobuf v1.36.6
 )
 
 require (
-	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.6 // indirect
