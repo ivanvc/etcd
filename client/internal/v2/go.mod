@@ -2,13 +2,13 @@ module go.etcd.io/etcd/client/v2
 
 go 1.24
 
-toolchain go1.24.1
+toolchain go1.24.2
 
 require (
 	github.com/stretchr/testify v1.10.0
-	go.etcd.io/etcd/api/v3 v3.6.0-alpha.0
-	go.etcd.io/etcd/client/pkg/v3 v3.6.0-alpha.0
-	sigs.k8s.io/json v0.0.0-20211020170558-c049b76a60c6
+	go.etcd.io/etcd/api/v3 v3.6.0-rc.3
+	go.etcd.io/etcd/client/pkg/v3 v3.6.0-rc.3
+	sigs.k8s.io/json v0.0.0-20241014173422-cfa47c3a1cc8
 )
 
 require (
