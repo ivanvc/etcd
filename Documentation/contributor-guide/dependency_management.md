@@ -125,7 +125,7 @@ execute it for 3.4.
 
 ## Golang versions
 
-The etcd project aims to maintain a development branch that is on the latest [Go version](https://go.dev/dl), ideally, this will align with the Go version in use for Kubernetes project development. For an example of how to update etcd to a new minor release of Go refer to issue <https://github.com/etcd-io/etcd/issues/16393> and the linked pull requests.
+The etcd project aims to maintain a development branch that is on the oldest supported [Go version](https://go.dev/dl), ideally, this will align with the Go version in use for Kubernetes project development. For an example of how to update etcd to a new minor release of Go refer to issue <https://github.com/etcd-io/etcd/issues/16393> and the linked pull requests.
 
 Suggested steps for performing a minor version upgrade for the etcd development branch:
 
