@@ -367,13 +367,24 @@ function shellcheck_pass {
 function shellws_pass {
   log_callout "Ensuring no tab-based indention in shell scripts"
   local files
-  if files=$(find . -name '*.sh' -print0 | xargs -0 grep -E -n $'^\s*\t'); then
+  files=$(find . -name '*.sh' -exec grep -H -E -n $'^\s*\t' {} \;)
+  if [ -n "${files}" ]; then
     log_error "FAIL: found tab-based indention in the following bash scripts. Use '  ' (double space):"
     log_error "${files}"
     log_warning "Suggestion: run \"make fix\" to address the issue."
     return 255
   fi
   log_success "SUCCESS: no tabulators found."
+}
+
+function shellws_fix_pass {
+  local TAB=$'\t'
+
+  log_callout "Fixing whitespaces in the bash scripts"
+  # Makes sure all bash scripts do use '  ' (double space) for indention.
+  log_cmd "find ./ -name '*.sh' -exec sed -i.bak 's|${TAB}|  |g' {} \;"
+  find ./ -name '*.sh' -exec sed -i.bak "s|${TAB}|  |g" {} \;
+  find ./ -name '*.sh.bak' -delete
 }
 
 function markdown_marker_pass {
