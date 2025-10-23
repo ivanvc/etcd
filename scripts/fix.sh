@@ -20,5 +20,4 @@ source ./scripts/updatebom.sh
 
 log_callout -e "\\nFixing etcd code for you...\n"
 
-run_for_modules run ${GO_CMD} fmt || exit 2
 log_success -e "\\nSUCCESS: etcd code is fixed :)"
