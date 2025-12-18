@@ -325,8 +325,10 @@ function go_test {
     # shellcheck disable=SC2086
     additional_flags=$(${flags_for_package_func} ${pkg})
 
+    set -x
     # shellcheck disable=SC2206
     local cmd=( go test ${goTestFlags} ${additional_flags} ${pkg} "$@" )
+    set +x
 
     # shellcheck disable=SC2086
     if ! run env ${goTestEnv} ETCD_VERIFY="${ETCD_VERIFY}" "${cmd[@]}" | tee ${junit_filename_prefix:+"${junit_filename_prefix}.stdout"} | grep --binary-files=text "${go_test_grep_pattern}" ; then
