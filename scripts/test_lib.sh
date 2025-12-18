@@ -414,7 +414,9 @@ function run_go_tests {
   local failures=()
   # execution of tests against packages:
   for pkg in "${packages[@]}"; do
+    set -x
     local cmd=(go test "${go_test_flags[@]}" "${pkg}" "${args[@]}")
+    set +x
 
     local junit_filename_prefix
     junit_filename_prefix=$(get_junit_filename_prefix "${junit_report_dir}")
