@@ -187,10 +187,10 @@ function robustness_pass {
   run_for_module "tests" go_test "./robustness" "keep_going" : -timeout="${TIMEOUT:-30m}" ${RUN_ARG[@]:-} "$@"
   log_callout "NEW RUN"
   KEEP_GOING_TESTS=true \
-    run_go_tests_expanding_packages ./tests/robustness/... \
-                                      -timeout="${TIMEOUT:-30m}" \
-                                      "${RUN_ARG[@]}" \
-                                      "$@"
+    run_go_tests ./tests/robustness/... \
+                    -timeout="${TIMEOUT:-30m}" \
+                    "${RUN_ARG[@]}" \
+                    "$@"
 }
 
 function integration_e2e_pass {
