@@ -266,6 +266,7 @@ function produce_junit_xmlreport {
 #
 #  The function returns != 0 code in case of test failure.
 function go_test {
+  set -x
   local packages="${1}"
   local mode="${2}"
   local flags_for_package_func="${3}"
@@ -326,9 +327,7 @@ function go_test {
     additional_flags=$(${flags_for_package_func} ${pkg})
 
     # shellcheck disable=SC2206
-    set -x
     local cmd=( go test ${goTestFlags} ${additional_flags} ${pkg} "$@" )
-    set +x
     continue
 
     # shellcheck disable=SC2086
@@ -343,6 +342,7 @@ function go_test {
     produce_junit_xmlreport "${junit_filename_prefix}"
   done
 
+    set +x
   if [ -n "${failures[*]}" ] ; then
     log_error -e "ERROR: Tests for following packages failed:\\n  ${failures[*]}"
     return 2
