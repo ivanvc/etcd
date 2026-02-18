@@ -31,7 +31,7 @@ import (
 	"go.uber.org/zap/zaptest"
 
 	"go.etcd.io/etcd/client/pkg/v3/types"
-	"go.etcd.io/etcd/client/v2"
+	"go.etcd.io/etcd/client/v3"
 )
 
 const (
