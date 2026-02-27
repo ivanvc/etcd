@@ -26,9 +26,8 @@ jobs:
     - name: Check PR assignee
       id: check
       run: |
-        ASSIGNEE="${{ github.event.assignee.login }}"
-        ALIAS_CHECK=$(yq '.aliases | [.sig-etcd-chairs,.sig-etcd-tech-leads].[].[] | select(. == env(ASSIGNEE))' OWNERS_ALIASES)
-        OWNERS_CHECK=$(yq '[.approvers,.reviewers].[].[] | select(. == env(ASSIGNEE))' OWNERS)
+        ALIAS_CHECK=$(yq '.aliases | [.sig-etcd-chairs,.sig-etcd-tech-leads].[].[] | select(. == "${{ github.event.assignee.login }}")' OWNERS_ALIASES)
+        OWNERS_CHECK=$(yq '[.approvers,.reviewers].[].[] | select(. == "${{ github.event.assignee.login }}")' OWNERS)
 
         if [ -n "$ALIAS_CHECK" ] || [ -n "$OWNERS_CHECK" ]; then
           echo "authorized=true" >> $GITHUB_OUTPUT
