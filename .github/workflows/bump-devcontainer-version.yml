@@ -1,0 +1,19 @@
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  dependabot:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'etcd-io/etcd'
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@ffa630c65fa7e0ecfa0625b5ceda64399aea1b36 # v3.0.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Update devcontainer.json
+        if: steps.metadata.outputs.directory == '/tools/container-images' && contains(steps.metadata.outputs.dependency-names, 'mcr.microsoft.com/devcontainers/go')
+        run: |
+          sed -i -E "s|(mcr\.microsoft\.com/devcontainers/go:)[^"'"'"]+|\1${{steps.metadata.outputs.new-version}}|" .devcontainer/devcontainer.json
+          git commit -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" --sign-off .devcontainer/devcontainer.json -m "build(deps): bump devcontainer.json\n\nBumps .devcontainer/devcontainer.json from ${{steps.metadata.outputs.old-version}} to ${{steps.metadata.outputs.new-version}}."
+          git push origin HEAD
