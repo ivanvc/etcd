@@ -36,8 +36,3 @@ updates:
     target-branch: "release-3.5"
     schedule:
       interval: monthly
-
-  - package-ecosystem: docker
-    directory: /tools/container-images
-    schedule:
-      interval: daily
