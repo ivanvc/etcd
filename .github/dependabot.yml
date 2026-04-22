@@ -38,6 +38,6 @@ updates:
       interval: monthly
 
   - package-ecosystem: docker
-    directory: /tools/container-images
+    directory: /tools/container-images/devcontainer
     schedule:
       interval: daily
