@@ -1,7 +1,6 @@
 name: Bump devcontainer version
 on: pull_request
 permissions:
-  contents: write
   pull-requests: read
 jobs:
   dependabot-metadata:
