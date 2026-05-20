@@ -1,13 +1,14 @@
 ---
 name: Test Development Container
-on: pull_request
+on: pull_request_target
 permissions: read-all
 jobs:
   test-devcontainer:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/devcontainers/go:1.26-bookworm
     steps:
       - name: Test Dev Container
-        uses: docker://mcr.microsoft.com/devcontainers/go:1.26-bookworm
         run: |
           git clone --depth=1 --branch=${GITHUB_REF_NAME} https://github.com/${GITHUB_REPOSITORY} etcd
           cd etcd
