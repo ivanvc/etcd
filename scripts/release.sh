@@ -251,7 +251,7 @@ main() {
       NO_DOCKER_PUSH=1
     else
       read -p "Publish etcd ${RELEASE_VERSION} docker images to registries [y/N]? " -r confirm
-      if [[ "${confirm,,}" == "y" ]]; then
+      if [[ "${confirm,,}" != "y" ]]; then
         NO_DOCKER_PUSH=1
       fi
     fi
