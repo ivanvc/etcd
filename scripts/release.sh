@@ -295,7 +295,7 @@ main() {
   # Check image versions
   local images=("quay.io/coreos/etcd:${RELEASE_VERSION}" "gcr.io/etcd-development/etcd:${RELEASE_VERSION}")
   if [ -n "${REGISTRY:-}" ]; then
-    images=("${REGISTRY}/etcd:${VERSION}")
+    images=("${REGISTRY}/etcd:${RELEASE_VERSION}")
   fi
 
   for IMAGE in "${images[@]}"; do
