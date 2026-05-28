@@ -14,6 +14,7 @@
 # limitations under the License.
 
 set -euo pipefail
+set -x
 
 if [ "$#" -lt 1 ]; then
   echo "Usage: $0 VERSION [NO_DOCKER_PUSH]" >&2
