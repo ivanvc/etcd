@@ -5,19 +5,19 @@ go 1.26
 toolchain go1.26.4
 
 require (
-	github.com/GoogleCloudPlatform/testgrid v0.0.173
+	github.com/GoogleCloudPlatform/testgrid v0.0.175
 	github.com/google/go-github/v60 v60.0.0
 	github.com/spf13/cobra v1.10.2
 	google.golang.org/protobuf v1.36.11
 )
 
 require (
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
-	golang.org/x/net v0.54.0 // indirect
-	golang.org/x/sys v0.45.0 // indirect
-	golang.org/x/text v0.37.0 // indirect
+	golang.org/x/net v0.56.0 // indirect
+	golang.org/x/sys v0.46.0 // indirect
+	golang.org/x/text v0.38.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260414002931-afd174a4e478 // indirect
-	google.golang.org/grpc v1.81.0 // indirect
+	google.golang.org/grpc v1.81.1 // indirect
 )
