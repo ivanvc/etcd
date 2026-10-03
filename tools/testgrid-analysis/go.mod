@@ -1,18 +1,18 @@
 module go.etcd.io/etcd/tools/testgrid-analysis/v3
 
-go 1.26
+go 1.26.0
 
 toolchain go1.26.4
 
 require (
 	github.com/GoogleCloudPlatform/testgrid v0.0.173
-	github.com/google/go-github/v60 v60.0.0
+	github.com/google/go-github/v92 v92.0.0
 	github.com/spf13/cobra v1.10.2
 	google.golang.org/protobuf v1.36.11
 )
 
 require (
-	github.com/google/go-querystring v1.1.0 // indirect
+	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.10 // indirect
 	golang.org/x/net v0.54.0 // indirect
