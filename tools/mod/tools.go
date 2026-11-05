@@ -21,7 +21,7 @@
 package tools
 
 import (
-	_ "github.com/alexfalkowski/gocovmerge"
+	_ "github.com/alexfalkowski/gocovmerge/v2"
 	_ "github.com/appscodelabs/license-bill-of-materials"
 	_ "github.com/cloudflare/cfssl/cmd/cfssl"
 	_ "github.com/cloudflare/cfssl/cmd/cfssljson"
@@ -29,7 +29,7 @@ import (
 	_ "github.com/google/yamlfmt/cmd/yamlfmt"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway"
 	_ "github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2"
-	_ "github.com/ryancurrah/gomodguard/cmd/gomodguard"
+	_ "github.com/ryancurrah/gomodguard/v2/cmd/gomodguard"
 	_ "golang.org/x/tools/cmd/goimports"
 	_ "google.golang.org/grpc/cmd/protoc-gen-go-grpc"
 	_ "google.golang.org/protobuf/cmd/protoc-gen-go"
